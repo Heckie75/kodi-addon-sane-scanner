@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+  <category label="Scanner">
+    <setting label="Start discovery" type="action" action="RunScript($ID,find_scanner)" default=""/>
+    <setting label="Select scanner" type="enum" id="scanner_scanner" values="Scanner 1|Scanner 2" default="0" />
+    <setting label="Scanner 1" type="text" enable="false" id="scanner_0" default="" />
+    <setting label="Scanner 2" type="text" enable="false" id="scanner_1" default="" />
+    <setting label="Scan settings" type="lsep" />
+    <setting label="Dimension" type="enum" id="scanner_dimension" values="Full|US letter|Din A4|Din A5|Din A6" default="0" />
+    <setting label="Mode" type="enum" id="scanner_mode" values="Lineart|Greyscale|Color" default="0" />
+    <setting label="Resolution" type="enum" id="scanner_resolution" values="150|200|300|600" default="1" />
+    <setting label="Brightness (in %)" type="slider" id="scanner_brightness" default="0" range="-100,1,100" option="int" />    
+  </category>
+  <category label="Output">
+    <setting label="PDF file" type="lsep" />
+    <setting label="OCR" type="enum" id="output_ocr" values="off|on" default="0" /> 
+    <setting label="See README for setup pre-conditions correctly!" type="text" enable="false"/>
+    <setting label="Archive" type="lsep" />
+    <setting label="Archive folder" type="folder" id="output_folder" default="~/" />
+    <setting label="Email" type="lsep" />
+    <setting label="Enable email" type="enum" id="output_email" values="No|Yes" default="0" />
+    <setting label="Recipient's email address" id="output_emailaddress" type="text" visible="eq(-1,1)" />
+    <setting label="Printer" type="lsep" />
+    <setting label="Select printer" type="enum" id="output_printer" values="off|Printer 1|Printer 2|Printer 3|Printer 4|Printer 5" default="0" />
+    <setting label="Start discovery" type="action" action="RunScript($ID,find_printer)" visible="!eq(-1,0)" />
+    <setting label="Printer 1" id="printer_1" type="text" enable="false"  default="" visible="!eq(-2,0)" />
+    <setting label="Printer 2" id="printer_2" type="text" enable="false"  default="" visible="!eq(-3,0)" />
+    <setting label="Printer 3" id="printer_3" type="text" enable="false"  default="" visible="!eq(-4,0)" />
+    <setting label="Printer 4" id="printer_4" type="text" enable="false"  default="" visible="!eq(-5,0)" />
+    <setting label="Printer 5" id="printer_5" type="text" enable="false"  default="" visible="!eq(-6,0)" />
+  </category>
+</settings>

@@ -1,2 +1,2 @@
 # kodi-addon-sane-scanner
-A scan addon for Kodi
+A scan tool for Kodi
