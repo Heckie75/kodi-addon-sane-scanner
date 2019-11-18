@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import datetime
-import json
 import os
 import re
 import shutil
@@ -17,30 +16,38 @@ import xbmcplugin
 import xbmcaddon
 
 __PLUGIN_ID__ = "plugin.picture.sane-scanner"
+_PLUGIN_NAME = "Kodi Sane Scanner"
 
 _TMP_FOLDER = "/tmp/"
 _TMP_FILE = "kodi-sane-scanner"
 
 _SCANNER_MODES = [
-            [ "--mode", "Lineart" ], 
-            [ "--mode", "Greyscale" ], 
+            [ "--mode", "Lineart" ],
+            [ "--mode", "Gray" ],
             [ "--mode", "Color" ]
         ]
 
-_SCANNNER_RESOLUTIONS = [ 
-            [ "--resolution", "150" ], 
-            [ "--resolution", "200" ], 
-            [ "--resolution", "300" ], 
+_SCANNNER_RESOLUTIONS = [
+            [ "--resolution", "150" ],
+            [ "--resolution", "200" ],
+            [ "--resolution", "300" ],
             [ "--resolution", "600" ]
         ]
 
 _SCANNER_DIMENSIONS = [
             [],
-            [ "-l", "0", "-t", "0", "-x", "216mm", "-y", "279mm" ], 
+            [ "-l", "0", "-t", "0", "-x", "216mm", "-y", "279mm" ],
             [ "-l", "0", "-t", "0", "-x", "210mm", "-y", "297mm" ],
             [ "-l", "0", "-t", "0", "-x", "148mm", "-y", "210mm" ],
             [ "-l", "0", "-t", "0", "-x", "105mm", "-y", "148mm" ],
         ]
+
+_SCANNER_FORMAT = [
+    "png",
+    "jpeg"
+]
+
+
 
 
 reload(sys)
@@ -50,12 +57,6 @@ settings = xbmcaddon.Addon(id=__PLUGIN_ID__);
 addon_dir = xbmc.translatePath( settings.getAddonInfo('path') )
 
 _menu = []
-
-
-
-
-class ContinueLoop(Exception):
-    pass
 
 
 
@@ -77,7 +78,8 @@ def find_scanner():
 
     i = 0
     for match in re.finditer('([^ ]+) (.+)', out.decode("utf-8")):
-        settings.setSetting("scanner_%i" % i, "%s|%s" % (match.group(1), match.group(2)))
+        settings.setSetting("scanner_%i" % i, "%s|%s" %
+                (match.group(2), match.group(1)))
         i = i + 1
 
     p1.stdout.close()
@@ -99,15 +101,16 @@ def find_scanner():
 
 def find_printer():
 
-    p1 = subprocess.Popen(["lpstat", "-a"],
+    p1 = subprocess.Popen(["lpstat", "-e"],
                                 stdout=subprocess.PIPE)
     out, err = p1.communicate()
     xbmc.log(out, xbmc.LOGNOTICE)
 
     i = 0
-    for match in re.finditer('([^ ]+) .+', out.decode("utf-8")):
+    for printer in out.decode("utf-8").split("\n"):
 
-        settings.setSetting("printer_%i" % (i + 1), "%s" % (match.group(1)))
+        settings.setSetting("printer_%i" % (i + 1), "%s"
+                % printer)
         i = i + 1
 
     p1.stdout.close()
@@ -127,6 +130,14 @@ def find_printer():
 
 
 
+def _get_scanner():
+
+    scanner = settings.getSetting("scanner_scanner")
+    return settings.getSetting("scanner_%s" % scanner).split("|")
+
+
+
+
 def _get_printer():
 
     printer = settings.getSetting("output_printer")
@@ -134,6 +145,13 @@ def _get_printer():
         return settings.getSetting("printer_%s" % printer)
     else:
         return ""
+
+
+
+
+def _get_format():
+
+    return _SCANNER_FORMAT[int(settings.getSetting("scanner_format"))]
 
 
 
@@ -186,14 +204,18 @@ def _add_list_item(entry, path):
     if "image" in entry:
         icon_file = entry["image"]
     elif "icon" in entry:
-        icon_file = os.path.join(addon_dir, "resources", "assets", entry["icon"] + ".png")
+        icon_file = os.path.join(addon_dir,
+                                "resources", "assets",
+                                entry["icon"] + ".png")
     else:
         icon_file = None
 
     li = xbmcgui.ListItem(label, iconImage=icon_file)
 
     if "image" in entry:
-        li.setAvailableFanart([{"image": icon_file, "preview": icon_file}])
+        li.setAvailableFanart([
+                    {"image": icon_file, "preview": icon_file}
+                ])
 
     xbmcplugin.addDirectoryItem(handle=addon_handle,
                             listitem=li,
@@ -201,7 +223,6 @@ def _add_list_item(entry, path):
                             + item_path
                             + param_string,
                             isFolder=is_folder)
-
 
 
 
@@ -289,7 +310,7 @@ def _build_dir_structure(path, url_params):
                 "exec" : [ "clean" ],
                 "msg" : "Cleaning all pages",
                 "node" : True
-            }            
+            }
         ]
 
     return entries
@@ -322,7 +343,7 @@ def _get_tmp_files():
     for s in files:
         if s.startswith(_TMP_FILE):
             result += [ s ]
-    
+
     result.sort()
 
     return result
@@ -332,18 +353,28 @@ def _get_tmp_files():
 
 def _scan():
 
-    call = ["scanimage", 
-            "--format=png",
-            "--brightness", settings.getSetting("scanner_brightness")
-        ] 
+    call = ["scanimage",
+            "--format=%s" % _get_format(),
+            "--brightness", settings.getSetting("scanner_brightness"),
+            "--contrast", settings.getSetting("scanner_contrast")
+        ]
 
-    call += _SCANNER_DIMENSIONS[int(settings.getSetting("scanner_dimension"))]
-    call += _SCANNER_MODES[int(settings.getSetting("scanner_mode"))]
-    call += _SCANNNER_RESOLUTIONS[int(settings.getSetting("scanner_resolution"))]
+    if len(_get_scanner()) == 2:
+        call += [ "--device-name=%s" % _get_scanner()[1] ]
+
+    call += _SCANNER_DIMENSIONS[
+                int(settings.getSetting("scanner_dimension"))]
+    call += _SCANNER_MODES[
+                int(settings.getSetting("scanner_mode"))]
+    call += _SCANNNER_RESOLUTIONS[
+                int(settings.getSetting("scanner_resolution"))]
 
     xbmc.log(" ".join(call), xbmc.LOGNOTICE)
 
-    tmp_file = open("%s%s.%i.png" % (_TMP_FOLDER, _TMP_FILE, time.time()), "w")
+    tmp_file = open("%s%s.%i.%s" % (_TMP_FOLDER, _TMP_FILE,
+                                    time.time(),
+                                    _get_format()),
+                "w")
     p = subprocess.Popen(call, stdout=tmp_file)
     p.wait()
     tmp_file.close()
@@ -386,7 +417,8 @@ def _ocr(pdf_file):
 
     xbmc.log(" ".join(call), xbmc.LOGNOTICE)
 
-    p = subprocess.Popen(call, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    p = subprocess.Popen(call, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE)
     out, err = p.communicate()
     p.stdout.close()
 
@@ -401,7 +433,11 @@ def _ocr(pdf_file):
 
 def _lampoff():
 
-    call = [ "scanimage", "-n", "--lamp-switch=no" ] 
+    call = [ "scanimage",
+            "-n", "--lamp-switch=no" ]
+
+    if len(_get_scanner()) == 2:
+        call += [ "--device-name=%s" % _get_scanner()[1] ]
 
     xbmc.log(" ".join(call), xbmc.LOGNOTICE)
 
@@ -413,21 +449,45 @@ def _lampoff():
 
 
 def _email(pdf_file):
-    pass
-#   mail -A "${PDF_FOLDER}${TARGET_FILE}" -s "Kodi Sane Scanner: ${TARGET_FILE}" email@web.de
+
+    call = [ "mail",
+            "-A", "%s%s" % (settings.getSetting("output_folder"),
+                            pdf_file),
+            "-s", "%s: %s" % (_PLUGIN_NAME, pdf_file),
+            settings.getSetting("output_emailaddress")
+            ]
+
+    xbmc.log(" ".join(call), xbmc.LOGNOTICE)
+
+    p = subprocess.Popen(call, stdout=subprocess.PIPE)
+    p.wait()
+    p.stdout.close()
 
 
 
 
 def _print(pdf_file):
-    pass
-#  lp "${PDF_FOLDER}${TARGET_FILE}"
+
+    call = [ "lp",
+            "-t", "%s: %s" % (_PLUGIN_NAME, pdf_file),
+            ]
+
+    if _get_printer() != "":
+        call += [ "-d", _get_printer() ]
+
+    call += [ "%s%s" % (settings.getSetting("output_folder"),  pdf_file) ]
+
+    xbmc.log(" ".join(call), xbmc.LOGNOTICE)
+
+    p = subprocess.Popen(call, stdout=subprocess.PIPE)
+    p.wait()
+    p.stdout.close()
 
 
 
 
 def _undo():
-    
+
     tmp_files = _get_tmp_files()
     os.remove("%s%s" % (_TMP_FOLDER, tmp_files[-1]))
 
@@ -435,7 +495,7 @@ def _undo():
 
 
 def _clean():
-        
+
     tmp_files = _get_tmp_files()
     for f in tmp_files:
         os.remove("%s%s" % (_TMP_FOLDER, f))
@@ -453,12 +513,11 @@ def _preview(path):
 
 
 
-
 def execute(path, params):
 
     if "silent" not in params and "msg" in params:
         xbmc.executebuiltin("Notification(%s, %s, %s/icon.png)"
-                        % ("Kodi Sane Scanner", params["msg"][0], addon_dir))
+                        % (_PLUGIN_NAME, params["msg"][0], addon_dir))
 
     try:
         xbmc.log(" ".join(params["exec"]), xbmc.LOGNOTICE);
@@ -468,10 +527,10 @@ def execute(path, params):
 
         elif params["exec"][0] == "undo":
             dialog = xbmcgui.Dialog()
-            ret = dialog.yesno("Kodi Sane Scanner", "Do you want to remove latest page?")
+            ret = dialog.yesno(_PLUGIN_NAME, "Do you want to remove latest page?")
             if ret:
                 _undo()
-        
+
         if params["exec"][0] == "preview":
             _preview(path)
 
@@ -484,7 +543,8 @@ def execute(path, params):
 #                 _ocr(pdf_file)
 
             shutil.move("%s%s" % (_TMP_FOLDER, pdf_file),
-                    "%s%s" % (settings.getSetting("output_folder"), pdf_file))
+                    "%s%s" % (settings.getSetting("output_folder"),
+                            pdf_file))
 
         if params["exec"][0] == "email":
             _email(pdf_file)
@@ -494,7 +554,8 @@ def execute(path, params):
 
         if params["exec"][0] in ["clean"]:
             dialog = xbmcgui.Dialog()
-            ret = dialog.yesno("Kodi Sane Scanner", "Do you want to clean filing?")
+            ret = dialog.yesno(_PLUGIN_NAME,
+                    "Do you want to clean filing?")
             if ret:
                 _clean()
 
@@ -518,7 +579,7 @@ if __name__ == '__main__':
 
     if sys.argv[1] == "find_scanner":
         find_scanner()
-    if sys.argv[1] == "find_printer":
+    elif sys.argv[1] == "find_printer":
         find_printer()
     else:
         addon_handle = int(sys.argv[1])

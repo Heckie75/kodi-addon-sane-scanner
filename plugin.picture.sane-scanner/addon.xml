@@ -27,9 +27,14 @@
 		- development starts
 		</news>
 		<assets>
-			<icon>icon.png</icon>
+			<icon>resources/icon.png</icon>
 			<fanart></fanart>
-			<screenshot></screenshot>
+			<screenshot>resources/assets/screenshot_1.png</screenshot>
+			<screenshot>resources/assets/screenshot_2.png</screenshot>
+			<screenshot>resources/assets/screenshot_3.png</screenshot>
+			<screenshot>resources/assets/screenshot_settings_1.png</screenshot>
+			<screenshot>resources/assets/screenshot_settings_2.png</screenshot>
+			<screenshot>resources/assets/screenshot_settings_3.png</screenshot>						
 		</assets>
 	</extension>
 </addon>
