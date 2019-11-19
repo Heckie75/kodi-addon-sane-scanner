@@ -411,12 +411,13 @@ def _ocr(pdf_file):
     pdf_file = "%s%s" % (_TMP_FOLDER, pdf_file)
     ocr_file = "%s.ocr" % pdf_file
 
-    call = [ "ocrmypdf", "-l", "deu",
+    call = [ addon_dir + os.sep + "resources"
+                + os.sep + "lib"
+                + os.sep + "ocrmypdf_wrapper",
             pdf_file,
             ocr_file ]
 
     xbmc.log(" ".join(call), xbmc.LOGNOTICE)
-
     p = subprocess.Popen(call, stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE)
     out, err = p.communicate()
@@ -539,8 +540,8 @@ def execute(path, params):
             pdf_file = _pdf()
             _clean()
 
-#            if settings.getSetting("output_ocr") == "1":
-#                 _ocr(pdf_file)
+            if settings.getSetting("output_ocr") == "1":
+                 _ocr(pdf_file)
 
             shutil.move("%s%s" % (_TMP_FOLDER, pdf_file),
                     "%s%s" % (settings.getSetting("output_folder"),
@@ -558,6 +559,7 @@ def execute(path, params):
                     "Do you want to clean filing?")
             if ret:
                 _clean()
+                _lampoff()
 
         time.sleep(0.5)
 

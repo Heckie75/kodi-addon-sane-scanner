@@ -7,7 +7,7 @@
     <setting label="Scanner 2" type="text" enable="false" id="scanner_1" default="" />
     <setting label="Scan settings" type="lsep" />
     <setting label="Dimension" type="enum" id="scanner_dimension" values="Full|US letter|Din A4|Din A5|Din A6" default="0" />
-    <setting label="Mode" type="enum" id="scanner_mode" values="Lineart|Greyscale|Color" default="0" />
+    <setting label="Mode" type="enum" id="scanner_mode" values="Lineart|Gray|Color" default="0" />
     <setting label="Format" type="enum" id="scanner_format" values="PNG|JPEG" default="0" />
     <setting label="Resolution" type="enum" id="scanner_resolution" values="150|200|300|600" default="1" />
     <setting label="Brightness (in %)" type="slider" id="scanner_brightness" default="0" range="-100,1,100" option="int" />
@@ -16,6 +16,7 @@
   <category label="Output">
     <setting label="PDF file" type="lsep" />
     <setting label="OCR" type="enum" id="output_ocr" values="off|on" default="0" />
+    <setting label="Experimental! Processing may takes a long time!" type="text" enable="false"/>
     <setting label="See README for setup pre-conditions correctly!" type="text" enable="false"/>
     <setting label="Archive" type="lsep" />
     <setting label="Archive folder" type="folder" id="output_folder" default="~/" />
