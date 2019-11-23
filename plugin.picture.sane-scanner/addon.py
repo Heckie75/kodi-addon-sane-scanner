@@ -15,11 +15,12 @@ import xbmcgui
 import xbmcplugin
 import xbmcaddon
 
-__PLUGIN_ID__ = "plugin.picture.sane-scanner"
-_PLUGIN_NAME = "Kodi Sane Scanner"
+__PLUGIN_ID__     = "plugin.picture.sane-scanner"
+_PLUGIN_NAME      = "Kodi Sane Scanner"
 
-_TMP_FOLDER = "/tmp/"
-_TMP_FILE = "kodi-sane-scanner"
+_TMP_FOLDER       = "/tmp/"
+_IMG_FILE         = "kodi-sane-scanner-img"
+_PDF_PREVIEW_FILE = "kodi-sane-scanner-pdf"
 
 _SCANNER_MODES = [
             [ "--mode", "Lineart" ],
@@ -197,7 +198,10 @@ def _add_list_item(entry, path):
             values = [ entry["msg"] ],
             current = param_string)
 
-    is_folder = "node" in entry and entry["node"]
+    if "node" in entry:
+        is_folder = True
+    else:
+        is_folder = False
 
     label = entry["name"]
 
@@ -227,9 +231,69 @@ def _add_list_item(entry, path):
 
 
 
-def _build_dir_structure(path, url_params):
+def  _build_pdf_preview(filename):
 
-    global _menu
+    for f in _get_preview_files():
+        os.remove("%s%s" % (_TMP_FOLDER, f))
+
+    _convert_for_preview(filename)
+
+    preview_entries = []
+    i = 0
+    for f in _get_preview_files():
+        xbmc.log(filename, xbmc.LOGNOTICE)
+        i = i + 1
+        preview_entries += [
+            {
+                "path" : "/%s" % f,
+                "name" : "Page %i" % i,
+                "image" : "%s%s" % (_TMP_FOLDER, f),
+                "exec" : [ "preview" ]
+            }
+        ]
+
+    entries = [
+        {
+        "path" : "archive",
+        "name" : "Archive",
+        "node" : preview_entries
+        }
+    ]
+
+    return entries
+
+
+
+
+def  _build_archive():
+
+    pdf_files = _get_pdf_files()
+
+    pdf_entries = []
+    for filename in pdf_files:
+        pdf_entries += [
+            {
+            "path" : filename,
+            "name" : filename,
+            "node" : []
+            }
+        ]
+
+
+    entries = [
+        {
+        "path" : "archive",
+        "name" : "Archive",
+        "node" : pdf_entries
+        }
+    ]
+
+    return entries
+
+
+
+
+def _build_root():
 
     tmp_files = _get_tmp_files()
 
@@ -240,7 +304,7 @@ def _build_dir_structure(path, url_params):
             "icon" : "icon_scan",
             "exec" : [ "scan" ],
             "msg" : "Scanning page... be patient!",
-            "node" : True
+            "node" : []
         }
     ]
 
@@ -252,7 +316,7 @@ def _build_dir_structure(path, url_params):
                 "icon" : "icon_pdf",
                 "exec" : [ "pdf" ],
                 "msg" : "Creating PDF file",
-                "node" : True
+                "node" : []
             }
         ]
 
@@ -264,7 +328,7 @@ def _build_dir_structure(path, url_params):
                 "icon" : "icon_email",
                 "exec" : [ "email" ],
                 "msg" : "Sending to %s" % settings.getSetting("output_emailaddress"),
-                "node" : True
+                "node" : []
             }
         ]
 
@@ -276,7 +340,7 @@ def _build_dir_structure(path, url_params):
                 "icon" : "icon_print",
                 "exec" : [ "print" ],
                 "msg" : "Printing on %s" % _get_printer(),
-                "node" : True
+                "node" : []
             }
         ]
 
@@ -288,8 +352,7 @@ def _build_dir_structure(path, url_params):
                 "path" : "/%s" % f,
                 "name" : "preview page %i" % i,
                 "image" : "%s%s" % (_TMP_FOLDER, f),
-                "exec" : [ "preview" ],
-                "node" : False
+                "exec" : [ "preview" ]
             }
         ]
 
@@ -301,7 +364,7 @@ def _build_dir_structure(path, url_params):
                 "icon" : "icon_undo",
                 "exec" : [ "undo" ],
                 "msg" : "removing latest page",
-                "node" : True
+                "node" : []
             },
             {
                 "path" : "/",
@@ -309,11 +372,67 @@ def _build_dir_structure(path, url_params):
                 "icon" : "icon_trash",
                 "exec" : [ "clean" ],
                 "msg" : "Cleaning all pages",
-                "node" : True
+                "node" : []
             }
         ]
 
+    entries += [
+        {
+        "path" : "archive",
+        "name" : "Archive",
+        "node" : []
+        }
+    ]
+
     return entries
+
+
+
+
+def _build_dir_structure(path, url_params):
+
+    global _menu
+
+    splitted_path = path.split("/")
+    splitted_path.pop(0)
+
+    entries = []
+
+    if path == "/":
+        entries = _build_root()
+
+    elif path == "/archive":
+        entries = _build_archive()
+
+    elif path.startswith("/archive") and len(splitted_path) == 2:
+        entries = _build_pdf_preview(splitted_path[1])
+
+    _menu = [
+        {
+        "path" : "",
+        "node" : entries
+        }
+    ]
+
+
+
+
+def _get_directory_by_path(path):
+
+    if path == "/":
+        return _menu[0]
+
+    tokens = path.split("/")[1:]
+    directory = _menu[0]
+
+    while len(tokens) > 0:
+        path = tokens.pop(0)
+        for node in directory["node"]:
+            if node["path"] == path:
+                directory = node
+                break
+
+    return directory
 
 
 
@@ -323,7 +442,8 @@ def browse(path, url_params):
     try:
         entries = _build_dir_structure(path, url_params)
 
-        for entry in entries:
+        directory = _get_directory_by_path(path)
+        for entry in directory["node"]:
             _add_list_item(entry, path)
 
         xbmcplugin.endOfDirectory(addon_handle, cacheToDisc=False)
@@ -337,11 +457,31 @@ def browse(path, url_params):
 
 
 def _get_tmp_files():
+    return _get_files(_TMP_FOLDER, "^" + _IMG_FILE)
 
-    files = os.listdir(_TMP_FOLDER)
+
+
+
+def _get_pdf_files():
+    return _get_files(settings.getSetting("output_folder"), "^.+\.pdf$")
+
+
+
+
+def _get_preview_files():
+    return _get_files(_TMP_FOLDER, "^" + _PDF_PREVIEW_FILE)
+
+
+
+
+def _get_files(dir, pattern):
+
+    p = re.compile(pattern, re.IGNORECASE)
+    files = os.listdir(dir)
     result = []
     for s in files:
-        if s.startswith(_TMP_FILE):
+        m = p.match(s)
+        if m:
             result += [ s ]
 
     result.sort()
@@ -371,7 +511,7 @@ def _scan():
 
     xbmc.log(" ".join(call), xbmc.LOGNOTICE)
 
-    tmp_file = open("%s%s.%i.%s" % (_TMP_FOLDER, _TMP_FILE,
+    tmp_file = open("%s%s.%i.%s" % (_TMP_FOLDER, _IMG_FILE,
                                     time.time(),
                                     _get_format()),
                 "w")
@@ -402,6 +542,25 @@ def _pdf():
     p.stdout.close()
 
     return pdf_file
+
+
+
+
+def _convert_for_preview(input_file):
+
+    call = ["convert",
+            "-density", _SCANNNER_RESOLUTIONS[
+                int(settings.getSetting("scanner_resolution"))][1],
+            "-quality", "90",
+            "%s%s" % (settings.getSetting("output_folder"), input_file),
+            "%s%s.%s%s" % (_TMP_FOLDER, _PDF_PREVIEW_FILE, input_file, ".png")
+        ]
+
+    xbmc.log(" ".join(call), xbmc.LOGNOTICE)
+
+    p = subprocess.Popen(call, stdout=subprocess.PIPE)
+    p.wait()
+    p.stdout.close()
 
 
 
