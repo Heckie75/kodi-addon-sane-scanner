@@ -35,6 +35,13 @@ _SCANNNER_RESOLUTIONS = [
             [ "--resolution", "600" ]
         ]
 
+_ARCHIVE_RESOLUTIONS = [
+            "150",
+            "200",
+            "300",
+            "600"
+        ]
+
 _SCANNER_DIMENSIONS = [
             [],
             [ "-l", "0", "-t", "0", "-x", "216mm", "-y", "279mm" ],
@@ -233,8 +240,7 @@ def _add_list_item(entry, path):
 
 def  _build_pdf_preview(filename):
 
-    for f in _get_preview_files():
-        os.remove("%s%s" % (_TMP_FOLDER, f))
+    _clean_preview()
 
     _convert_for_preview(filename)
 
@@ -266,6 +272,8 @@ def  _build_pdf_preview(filename):
 
 
 def  _build_archive():
+
+    _clean_preview()
 
     pdf_files = _get_pdf_files()
 
@@ -376,13 +384,14 @@ def _build_root():
             }
         ]
 
-    entries += [
-        {
-        "path" : "archive",
-        "name" : "Archive",
-        "node" : []
-        }
-    ]
+    if settings.getSetting("archive") == "true":
+        entries += [
+            {
+            "path" : "archive",
+            "name" : "Archive",
+            "node" : []
+            }
+        ]
 
     return entries
 
@@ -549,9 +558,10 @@ def _pdf():
 def _convert_for_preview(input_file):
 
     call = ["convert",
-            "-density", _SCANNNER_RESOLUTIONS[
-                int(settings.getSetting("scanner_resolution"))][1],
+            "-density", _ARCHIVE_RESOLUTIONS[
+                int(settings.getSetting("archive_resolution"))],
             "-quality", "90",
+            "-background", "white", "-alpha", "background", "-alpha", "off",
             "%s%s" % (settings.getSetting("output_folder"), input_file),
             "%s%s.%s%s" % (_TMP_FOLDER, _PDF_PREVIEW_FILE, input_file, ".png")
         ]
@@ -658,6 +668,14 @@ def _clean():
 
     tmp_files = _get_tmp_files()
     for f in tmp_files:
+        os.remove("%s%s" % (_TMP_FOLDER, f))
+
+
+
+
+def _clean_preview():
+
+    for f in _get_preview_files():
         os.remove("%s%s" % (_TMP_FOLDER, f))
 
 

@@ -33,4 +33,8 @@
     <setting label="Printer 4" id="printer_4" type="text" enable="false"  default="" />
     <setting label="Printer 5" id="printer_5" type="text" enable="false"  default="" />
   </category>
+  <category label="Archive">
+    <setting label="Browsing archive" type="bool" id="archive" default="true" />
+    <setting label="Resolution" type="enum" id="archive_resolution" values="150|200|300|600" default="1" />    
+  </category>
 </settings>
