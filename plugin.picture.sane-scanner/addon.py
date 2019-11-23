@@ -531,6 +531,8 @@ def execute(path, params):
             ret = dialog.yesno(_PLUGIN_NAME, "Do you want to remove latest page?")
             if ret:
                 _undo()
+                if len(_get_tmp_files()) == 0:
+                    _lampoff()
 
         if params["exec"][0] == "preview":
             _preview(path)
