@@ -240,6 +240,9 @@ def _add_list_item(entry, path):
 
 def  _build_pdf_preview(filename):
 
+    xbmc.executebuiltin("Notification(%s, %s, %s/icon.png)"
+                    % (_PLUGIN_NAME, "Rendering preview... be patient!", addon_dir))
+
     _clean_preview()
 
     _convert_for_preview(filename)
