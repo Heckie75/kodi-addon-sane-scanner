@@ -35,6 +35,7 @@
   </category>
   <category label="Archive">
     <setting label="Browsing archive" type="bool" id="archive" default="true" />
-    <setting label="Resolution" type="enum" id="archive_resolution" values="150|200|300|600" default="1" />    
+    <setting label="Resolution" type="enum" id="archive_resolution" values="150|200|300|600" default="1" />
+    <setting label="File operations (rename, delete)" type="bool" id="archive_operations" default="false" />
   </category>
 </settings>

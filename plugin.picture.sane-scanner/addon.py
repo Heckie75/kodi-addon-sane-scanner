@@ -293,15 +293,21 @@ def  _build_archive():
 
     pdf_files = _get_pdf_files()
 
+    if settings.getSetting("archive_operations") == "false":
+        contextItems = []
+    else:
+        contextItems = [
+                ("Rename PDF file", "rename"),
+                ("Delete PDF file", "delete")
+            ]
+
     pdf_entries = []
     for filename in pdf_files:
         pdf_entries += [
             {
             "path" : filename,
             "name" : filename,
-            "contextItems" : [
-                ('Rename PDF file', 'rename')
-            ],
+            "contextItems" : contextItems,
             "node" : []
             }
         ]
@@ -637,6 +643,20 @@ def _rename_pdf(path):
 
 
 
+def _delete_pdf(path):
+    
+    splitted_path = path.split("/")
+    file_to_delete = splitted_path[-1]
+
+    ret = xbmcgui.Dialog().yesno(_PLUGIN_NAME, "Do you want to delete %s?" 
+                                    % file_to_delete)
+    if ret:
+        os.remove("%s%s" % (settings.getSetting("output_folder"), 
+                            file_to_delete))
+
+
+
+
 def _lampoff():
 
     call = [ "scanimage",
@@ -779,14 +799,19 @@ def execute(path, params):
 
         if params["exec"][0] == "rename":
             _rename_pdf(path)
-            xbmc.executebuiltin('Container.Update("plugin://%s%s","update")' 
-                        % (__PLUGIN_ID__, "/archive"))               
+        elif params["exec"][0] == "delete":
+            _delete_pdf(path)
+
+
+        if params["exec"][0] in [ "rename", "delete" ]:
+            xbmc.executebuiltin('Container.Update("plugin://%s%s","update")'
+                        % (__PLUGIN_ID__, "/archive"))
 
         if "silent" not in params and "msg" in params:
             xbmc.executebuiltin("Notification(%s, %s, %s/icon.png)"
                         % ("Success!", params["msg"][0], addon_dir))
 
-            xbmc.executebuiltin('Container.Update("plugin://%s%s","update")' 
+            xbmc.executebuiltin('Container.Update("plugin://%s","update")'
                         % __PLUGIN_ID__)
 
     except ScanException:
