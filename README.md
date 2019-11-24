@@ -23,6 +23,8 @@ That's why I have written this addon which comes with the following features:
 * archive PDF in filesystem
 * send PDF as email attachment
 * print document
+* view PDF documents located in archive folder (PDF files in general!)
+* rename PDF documents in archive folder
 
 Here are some screenshots. 
 

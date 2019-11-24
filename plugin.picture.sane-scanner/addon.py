@@ -228,6 +228,19 @@ def _add_list_item(entry, path):
                     {"image": icon_file, "preview": icon_file}
                 ])
 
+    if "contextItems" in entry:
+        commands = []
+        for ci in entry["contextItems"]:
+            p = _build_param_string(
+                                    param = "exec",
+                                    values = [ ci[1] ],
+                                    current = "")
+            url = "plugin://%s%s%s" % (__PLUGIN_ID__, item_path, p)
+            commands.append(( ci[0], 'XBMC.RunPlugin(%s)' % url, ))
+
+        li.addContextMenuItems(commands)
+
+
     xbmcplugin.addDirectoryItem(handle=addon_handle,
                             listitem=li,
                             url="plugin://" + __PLUGIN_ID__
@@ -286,6 +299,9 @@ def  _build_archive():
             {
             "path" : filename,
             "name" : filename,
+            "contextItems" : [
+                ('Rename PDF file', 'rename')
+            ],
             "node" : []
             }
         ]
@@ -604,6 +620,23 @@ def _ocr(pdf_file):
 
 
 
+def _rename_pdf(path):
+    
+    splitted_path = path.split("/")
+    filename = splitted_path[-1]
+
+    renamed_file = xbmcgui.Dialog().input("Rename PDF file", 
+                                        filename, 
+                                        xbmcgui.INPUT_ALPHANUM)
+    
+    if renamed_file != "":
+        archive = settings.getSetting("output_folder")
+        shutil.move("%s%s" % (archive, filename), 
+                    "%s%s" % (archive, renamed_file))
+
+
+
+
 def _lampoff():
 
     call = [ "scanimage",
@@ -701,7 +734,8 @@ def execute(path, params):
                         % (_PLUGIN_NAME, params["msg"][0], addon_dir))
 
     try:
-        xbmc.log(" ".join(params["exec"]), xbmc.LOGNOTICE);
+        xbmc.log(path, xbmc.LOGNOTICE)
+        xbmc.log(" ".join(params["exec"]), xbmc.LOGNOTICE)
 
         if params["exec"][0] == "scan":
             _scan()
@@ -743,13 +777,17 @@ def execute(path, params):
                 _clean()
                 _lampoff()
 
-        time.sleep(0.5)
+        if params["exec"][0] == "rename":
+            _rename_pdf(path)
+            xbmc.executebuiltin('Container.Update("plugin://%s%s","update")' 
+                        % (__PLUGIN_ID__, "/archive"))               
 
         if "silent" not in params and "msg" in params:
             xbmc.executebuiltin("Notification(%s, %s, %s/icon.png)"
                         % ("Success!", params["msg"][0], addon_dir))
 
-            xbmc.executebuiltin('Container.Update("plugin://%s","update")' % __PLUGIN_ID__)
+            xbmc.executebuiltin('Container.Update("plugin://%s%s","update")' 
+                        % __PLUGIN_ID__)
 
     except ScanException:
         if "silent" not in params:
