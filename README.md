@@ -24,7 +24,7 @@ That's why I have written this addon which comes with the following features:
 * send PDF as email attachment
 * print document
 * view PDF documents located in archive folder (PDF files in general!)
-* rename PDF documents in archive folder
+* rename and delete PDF documents in archive folder via context menu
 
 Here are some screenshots. 
 
