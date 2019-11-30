@@ -667,8 +667,9 @@ def _lampoff():
     call = [ "scanimage",
             "-n", "--lamp-switch=no" ]
 
-    if len(_get_scanner()) == 2:
-        call += [ "--device-name=%s" % _get_scanner()[1] ]
+    _scanner = _get_scanner()
+    if _scanner != None and len(_scanner) == 2:
+        call += [ "--device-name=%s" % _scanner[1] ]
 
     xbmc.log(" ".join(call), xbmc.LOGNOTICE)
 
