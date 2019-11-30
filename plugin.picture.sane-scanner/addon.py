@@ -141,7 +141,11 @@ def find_printer():
 def _get_scanner():
 
     scanner = settings.getSetting("scanner_scanner")
-    return settings.getSetting("scanner_%s" % scanner).split("|")
+
+    if scanner == "2":
+        return None
+    else:
+        return settings.getSetting("scanner_%s" % scanner).split("|")
 
 
 
@@ -533,8 +537,9 @@ def _scan():
             "--contrast", settings.getSetting("scanner_contrast")
         ]
 
-    if len(_get_scanner()) == 2:
-        call += [ "--device-name=%s" % _get_scanner()[1] ]
+    _scanner = _get_scanner()
+    if _scanner != None and len(_scanner) == 2:
+        call += [ "--device-name=%s" % _scanner[1] ]
 
     call += _SCANNER_DIMENSIONS[
                 int(settings.getSetting("scanner_dimension"))]

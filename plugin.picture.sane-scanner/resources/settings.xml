@@ -2,7 +2,7 @@
 <settings>
   <category label="Scanner">
     <setting label="Start discovery" type="action" action="RunScript($ID,find_scanner)" default=""/>
-    <setting label="Select scanner" type="enum" id="scanner_scanner" values="Scanner 1|Scanner 2" default="0" />
+    <setting label="Select scanner" type="enum" id="scanner_scanner" values="Scanner 1|Scanner 2|any" default="2" />
     <setting label="Scanner 1" type="text" enable="false" id="scanner_0" default="" />
     <setting label="Scanner 2" type="text" enable="false" id="scanner_1" default="" />
     <setting label="Scan settings" type="lsep" />
