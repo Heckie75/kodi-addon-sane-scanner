@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
 import datetime
@@ -8,47 +8,48 @@ import shutil
 import subprocess
 import sys
 import time
-import urlparse
+import urllib.parse
 
 import xbmc
 import xbmcgui
 import xbmcplugin
 import xbmcaddon
+import xbmcvfs
 
-__PLUGIN_ID__     = "plugin.picture.sane-scanner"
-_PLUGIN_NAME      = "Kodi Sane Scanner"
+__PLUGIN_ID__ = "plugin.picture.sane-scanner"
+_PLUGIN_NAME = "Kodi Sane Scanner"
 
-_TMP_FOLDER       = "/tmp/"
-_IMG_FILE         = "kodi-sane-scanner-img"
+_TMP_FOLDER = "/tmp/"
+_IMG_FILE = "kodi-sane-scanner-img"
 _PDF_PREVIEW_FILE = "kodi-sane-scanner-pdf"
 
 _SCANNER_MODES = [
-            [ "--mode", "Lineart" ],
-            [ "--mode", "Gray" ],
-            [ "--mode", "Color" ]
-        ]
+    ["--mode", "Lineart"],
+    ["--mode", "Gray"],
+    ["--mode", "Color"]
+]
 
 _SCANNNER_RESOLUTIONS = [
-            [ "--resolution", "150" ],
-            [ "--resolution", "200" ],
-            [ "--resolution", "300" ],
-            [ "--resolution", "600" ]
-        ]
+    ["--resolution", "150"],
+    ["--resolution", "200"],
+    ["--resolution", "300"],
+    ["--resolution", "600"]
+]
 
 _ARCHIVE_RESOLUTIONS = [
-            "150",
-            "200",
-            "300",
-            "600"
-        ]
+    "150",
+    "200",
+    "300",
+    "600"
+]
 
 _SCANNER_DIMENSIONS = [
-            [],
-            [ "-l", "0", "-t", "0", "-x", "216mm", "-y", "279mm" ],
-            [ "-l", "0", "-t", "0", "-x", "210mm", "-y", "297mm" ],
-            [ "-l", "0", "-t", "0", "-x", "148mm", "-y", "210mm" ],
-            [ "-l", "0", "-t", "0", "-x", "105mm", "-y", "148mm" ],
-        ]
+    [],
+    ["-l", "0", "-t", "0", "-x", "216mm", "-y", "279mm"],
+    ["-l", "0", "-t", "0", "-x", "210mm", "-y", "297mm"],
+    ["-l", "0", "-t", "0", "-x", "148mm", "-y", "210mm"],
+    ["-l", "0", "-t", "0", "-x", "105mm", "-y", "148mm"],
+]
 
 _SCANNER_FORMAT = [
     "png",
@@ -56,38 +57,28 @@ _SCANNER_FORMAT = [
 ]
 
 
-
-
-reload(sys)
-sys.setdefaultencoding('utf8')
-
-settings = xbmcaddon.Addon(id=__PLUGIN_ID__);
-addon_dir = xbmc.translatePath( settings.getAddonInfo('path') )
+settings = xbmcaddon.Addon(id=__PLUGIN_ID__)
+addon_dir = xbmcvfs.translatePath(settings.getAddonInfo('path'))
 
 _menu = []
-
-
 
 
 class ScanException(Exception):
     pass
 
 
-
-
 def find_scanner():
 
     p1 = subprocess.Popen(["scanimage", "-f" "%d %v %m %t%n"],
-                                stdout=subprocess.PIPE,
-                                stderr=subprocess.PIPE)
+                          stdout=subprocess.PIPE,
+                          stderr=subprocess.PIPE)
 
     out, err = p1.communicate()
-    xbmc.log(out, xbmc.LOGNOTICE)
 
     i = 0
     for match in re.finditer('([^ ]+) (.+)', out.decode("utf-8")):
         settings.setSetting("scanner_%i" % i, "%s|%s" %
-                (match.group(2), match.group(1)))
+                            (match.group(2), match.group(1)))
         i = i + 1
 
     p1.stdout.close()
@@ -105,20 +96,17 @@ def find_scanner():
             "%i scanners added to device list)" % i)
 
 
-
-
 def find_printer():
 
     p1 = subprocess.Popen(["lpstat", "-e"],
-                                stdout=subprocess.PIPE)
+                          stdout=subprocess.PIPE)
     out, err = p1.communicate()
-    xbmc.log(out, xbmc.LOGNOTICE)
 
     i = 0
     for printer in out.decode("utf-8").split("\n"):
 
         settings.setSetting("printer_%i" % (i + 1), "%s"
-                % printer)
+                            % printer)
         i = i + 1
 
     p1.stdout.close()
@@ -136,8 +124,6 @@ def find_printer():
             "%i printers added to device list)" % i)
 
 
-
-
 def _get_scanner():
 
     scanner = settings.getSetting("scanner_scanner")
@@ -146,8 +132,6 @@ def _get_scanner():
         return None
     else:
         return settings.getSetting("scanner_%s" % scanner).split("|")
-
-
 
 
 def _get_printer():
@@ -159,16 +143,12 @@ def _get_printer():
         return ""
 
 
-
-
 def _get_format():
 
     return _SCANNER_FORMAT[int(settings.getSetting("scanner_format"))]
 
 
-
-
-def _build_param_string(param, values, current = ""):
+def _build_param_string(param, values, current=""):
 
     if values == None:
         return current
@@ -180,34 +160,31 @@ def _build_param_string(param, values, current = ""):
     return current
 
 
-
-
 def _add_list_item(entry, path):
 
     if path == "/":
         path = ""
 
     item_path = path + "/" + entry["path"]
-    item_id = item_path.replace("/", "_")
 
     param_string = ""
     if "exec" in entry:
         param_string = _build_param_string(
-            param = "exec",
-            values = entry["exec"],
-            current = param_string)
+            param="exec",
+            values=entry["exec"],
+            current=param_string)
 
     if "param" in entry:
         param_string = _build_param_string(
-            param = entry["param"][0],
-            values = [ entry["param"][1] ],
-            current = param_string)
+            param=entry["param"][0],
+            values=[entry["param"][1]],
+            current=param_string)
 
     if "msg" in entry:
         param_string = _build_param_string(
-            param = "msg",
-            values = [ entry["msg"] ],
-            current = param_string)
+            param="msg",
+            values=[entry["msg"]],
+            current=param_string)
 
     if "node" in entry:
         is_folder = True
@@ -220,45 +197,43 @@ def _add_list_item(entry, path):
         icon_file = entry["image"]
     elif "icon" in entry:
         icon_file = os.path.join(addon_dir,
-                                "resources", "assets",
-                                entry["icon"] + ".png")
+                                 "resources", "assets",
+                                 entry["icon"] + ".png")
     else:
         icon_file = None
 
-    li = xbmcgui.ListItem(label, iconImage=icon_file)
+    li = xbmcgui.ListItem(label)
+    li.setArt({"icon": icon_file})
 
     if "image" in entry:
         li.setAvailableFanart([
-                    {"image": icon_file, "preview": icon_file}
-                ])
+            {"image": icon_file, "preview": icon_file}
+        ])
 
     if "contextItems" in entry:
         commands = []
         for ci in entry["contextItems"]:
             p = _build_param_string(
-                                    param = "exec",
-                                    values = [ ci[1] ],
-                                    current = "")
+                param="exec",
+                values=[ci[1]],
+                current="")
             url = "plugin://%s%s%s" % (__PLUGIN_ID__, item_path, p)
-            commands.append(( ci[0], 'XBMC.RunPlugin(%s)' % url, ))
+            commands.append((ci[0], 'XBMC.RunPlugin(%s)' % url, ))
 
         li.addContextMenuItems(commands)
 
-
     xbmcplugin.addDirectoryItem(handle=addon_handle,
-                            listitem=li,
-                            url="plugin://" + __PLUGIN_ID__
-                            + item_path
-                            + param_string,
-                            isFolder=is_folder)
+                                listitem=li,
+                                url="plugin://" + __PLUGIN_ID__
+                                + item_path
+                                + param_string,
+                                isFolder=is_folder)
 
 
-
-
-def  _build_pdf_preview(filename):
+def _build_pdf_preview(filename):
 
     xbmc.executebuiltin("Notification(%s, %s, %s/icon.png)"
-                    % (_PLUGIN_NAME, "Rendering preview... be patient!", addon_dir))
+                        % (_PLUGIN_NAME, "Rendering preview... be patient!", addon_dir))
 
     _clean_preview()
 
@@ -267,31 +242,28 @@ def  _build_pdf_preview(filename):
     preview_entries = []
     i = 0
     for f in _get_preview_files():
-        xbmc.log(filename, xbmc.LOGNOTICE)
         i = i + 1
         preview_entries += [
             {
-                "path" : "/%s" % f,
-                "name" : "Page %i" % i,
-                "image" : "%s%s" % (_TMP_FOLDER, f),
-                "exec" : [ "preview" ]
+                "path": "/%s" % f,
+                "name": "Page %i" % i,
+                "image": "%s%s" % (_TMP_FOLDER, f),
+                "exec": ["preview"]
             }
         ]
 
     entries = [
         {
-        "path" : "archive",
-        "name" : "Archive",
-        "node" : preview_entries
+            "path": "archive",
+            "name": "Archive",
+            "node": preview_entries
         }
     ]
 
     return entries
 
 
-
-
-def  _build_archive():
+def _build_archive():
 
     _clean_preview()
 
@@ -301,33 +273,30 @@ def  _build_archive():
         contextItems = []
     else:
         contextItems = [
-                ("Rename PDF file", "rename"),
-                ("Delete PDF file", "delete")
-            ]
+            ("Rename PDF file", "rename"),
+            ("Delete PDF file", "delete")
+        ]
 
     pdf_entries = []
     for filename in pdf_files:
         pdf_entries += [
             {
-            "path" : filename,
-            "name" : filename,
-            "contextItems" : contextItems,
-            "node" : []
+                "path": filename,
+                "name": filename,
+                "contextItems": contextItems,
+                "node": []
             }
         ]
 
-
     entries = [
         {
-        "path" : "archive",
-        "name" : "Archive",
-        "node" : pdf_entries
+            "path": "archive",
+            "name": "Archive",
+            "node": pdf_entries
         }
     ]
 
     return entries
-
-
 
 
 def _build_root():
@@ -336,48 +305,48 @@ def _build_root():
 
     entries = [
         {
-            "path" : "/",
-            "name" : "scan image",
-            "icon" : "icon_scan",
-            "exec" : [ "scan" ],
-            "msg" : "Scanning page... be patient!",
-            "node" : []
+            "path": "/",
+            "name": "scan image",
+            "icon": "icon_scan",
+            "exec": ["scan"],
+            "msg": "Scanning page... be patient!",
+            "node": []
         }
     ]
 
     if len(tmp_files) > 0:
         entries += [
             {
-                "path" : "/",
-                "name" : "create PDF",
-                "icon" : "icon_pdf",
-                "exec" : [ "pdf" ],
-                "msg" : "Creating PDF file",
-                "node" : []
+                "path": "/",
+                "name": "create PDF",
+                "icon": "icon_pdf",
+                "exec": ["pdf"],
+                "msg": "Creating PDF file",
+                "node": []
             }
         ]
 
     if len(tmp_files) > 0 and settings.getSetting("output_email") == "1":
         entries += [
             {
-                "path" : "/",
-                "name" : "create PDF and send email to %s" % settings.getSetting("output_emailaddress"),
-                "icon" : "icon_email",
-                "exec" : [ "email" ],
-                "msg" : "Sending to %s" % settings.getSetting("output_emailaddress"),
-                "node" : []
+                "path": "/",
+                "name": "create PDF and send email to %s" % settings.getSetting("output_emailaddress"),
+                "icon": "icon_email",
+                "exec": ["email"],
+                "msg": "Sending to %s" % settings.getSetting("output_emailaddress"),
+                "node": []
             }
         ]
 
     if len(tmp_files) > 0 and settings.getSetting("output_printer") != "0":
         entries += [
             {
-                "path" : "/",
-                "name" : "create PDF and print on %s" % _get_printer(),
-                "icon" : "icon_print",
-                "exec" : [ "print" ],
-                "msg" : "Printing on %s" % _get_printer(),
-                "node" : []
+                "path": "/",
+                "name": "create PDF and print on %s" % _get_printer(),
+                "icon": "icon_print",
+                "exec": ["print"],
+                "msg": "Printing on %s" % _get_printer(),
+                "node": []
             }
         ]
 
@@ -386,45 +355,43 @@ def _build_root():
         i = i + 1
         entries += [
             {
-                "path" : "/%s" % f,
-                "name" : "preview page %i" % i,
-                "image" : "%s%s" % (_TMP_FOLDER, f),
-                "exec" : [ "preview" ]
+                "path": "/%s" % f,
+                "name": "preview page %i" % i,
+                "image": "%s%s" % (_TMP_FOLDER, f),
+                "exec": ["preview"]
             }
         ]
 
     if len(tmp_files) > 0:
         entries += [
             {
-                "path" : "/",
-                "name" : "remove latest page",
-                "icon" : "icon_undo",
-                "exec" : [ "undo" ],
-                "msg" : "removing latest page",
-                "node" : []
+                "path": "/",
+                "name": "remove latest page",
+                "icon": "icon_undo",
+                "exec": ["undo"],
+                "msg": "removing latest page",
+                "node": []
             },
             {
-                "path" : "/",
-                "name" : "clean whole filing",
-                "icon" : "icon_trash",
-                "exec" : [ "clean" ],
-                "msg" : "Cleaning all pages",
-                "node" : []
+                "path": "/",
+                "name": "clean whole filing",
+                "icon": "icon_trash",
+                "exec": ["clean"],
+                "msg": "Cleaning all pages",
+                "node": []
             }
         ]
 
     if settings.getSetting("archive") == "true":
         entries += [
             {
-            "path" : "archive",
-            "name" : "Archive",
-            "node" : []
+                "path": "archive",
+                "name": "Archive",
+                "node": []
             }
         ]
 
     return entries
-
-
 
 
 def _build_dir_structure(path, url_params):
@@ -447,12 +414,10 @@ def _build_dir_structure(path, url_params):
 
     _menu = [
         {
-        "path" : "",
-        "node" : entries
+            "path": "",
+            "node": entries
         }
     ]
-
-
 
 
 def _get_directory_by_path(path):
@@ -473,12 +438,10 @@ def _get_directory_by_path(path):
     return directory
 
 
-
-
 def browse(path, url_params):
 
     try:
-        entries = _build_dir_structure(path, url_params)
+        _build_dir_structure(path, url_params)
 
         directory = _get_directory_by_path(path)
         for entry in directory["node"]:
@@ -488,28 +451,20 @@ def browse(path, url_params):
 
     except ScanException:
         xbmc.executebuiltin("Notification(%s, %s, %s/icon.png)"
-                        % ("Execution failed!",
-                           "Try again!", addon_dir))
-
-
+                            % ("Execution failed!",
+                               "Try again!", addon_dir))
 
 
 def _get_tmp_files():
     return _get_files(_TMP_FOLDER, "^" + _IMG_FILE)
 
 
-
-
 def _get_pdf_files():
     return _get_files(settings.getSetting("output_folder"), "^.+\.pdf$")
 
 
-
-
 def _get_preview_files():
     return _get_files(_TMP_FOLDER, "^" + _PDF_PREVIEW_FILE)
-
-
 
 
 def _get_files(dir, pattern):
@@ -520,13 +475,11 @@ def _get_files(dir, pattern):
     for s in files:
         m = p.match(s)
         if m:
-            result += [ s ]
+            result += [s]
 
     result.sort()
 
     return result
-
-
 
 
 def _scan():
@@ -535,30 +488,26 @@ def _scan():
             "--format=%s" % _get_format(),
             "--brightness", settings.getSetting("scanner_brightness"),
             "--contrast", settings.getSetting("scanner_contrast")
-        ]
+            ]
 
     _scanner = _get_scanner()
     if _scanner != None and len(_scanner) == 2:
-        call += [ "--device-name=%s" % _scanner[1] ]
+        call += ["--device-name=%s" % _scanner[1]]
 
     call += _SCANNER_DIMENSIONS[
-                int(settings.getSetting("scanner_dimension"))]
+        int(settings.getSetting("scanner_dimension"))]
     call += _SCANNER_MODES[
-                int(settings.getSetting("scanner_mode"))]
+        int(settings.getSetting("scanner_mode"))]
     call += _SCANNNER_RESOLUTIONS[
-                int(settings.getSetting("scanner_resolution"))]
-
-    xbmc.log(" ".join(call), xbmc.LOGNOTICE)
+        int(settings.getSetting("scanner_resolution"))]
 
     tmp_file = open("%s%s.%i.%s" % (_TMP_FOLDER, _IMG_FILE,
                                     time.time(),
                                     _get_format()),
-                "w")
+                    "w")
     p = subprocess.Popen(call, stdout=tmp_file)
     p.wait()
     tmp_file.close()
-
-
 
 
 def _pdf():
@@ -566,23 +515,19 @@ def _pdf():
     tmp_files = _get_tmp_files()
     full_path = []
     for f in tmp_files:
-        full_path += [ "%s%s" % (_TMP_FOLDER, f) ]
+        full_path += ["%s%s" % (_TMP_FOLDER, f)]
 
     pdf_file = "%s.scan.pdf" % datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
     call = ["convert"]
     call += full_path
-    call += [ "%s%s" % (_TMP_FOLDER, pdf_file) ]
-
-    xbmc.log(" ".join(call), xbmc.LOGNOTICE)
+    call += ["%s%s" % (_TMP_FOLDER, pdf_file)]
 
     p = subprocess.Popen(call, stdout=subprocess.PIPE)
     p.wait()
     p.stdout.close()
 
     return pdf_file
-
-
 
 
 def _convert_for_preview(input_file):
@@ -594,15 +539,11 @@ def _convert_for_preview(input_file):
             "-background", "white", "-alpha", "background", "-alpha", "off",
             "%s%s" % (settings.getSetting("output_folder"), input_file),
             "%s%s.%s%s" % (_TMP_FOLDER, _PDF_PREVIEW_FILE, input_file, ".png")
-        ]
-
-    xbmc.log(" ".join(call), xbmc.LOGNOTICE)
+            ]
 
     p = subprocess.Popen(call, stdout=subprocess.PIPE)
     p.wait()
     p.stdout.close()
-
-
 
 
 def _ocr(pdf_file):
@@ -610,120 +551,96 @@ def _ocr(pdf_file):
     pdf_file = "%s%s" % (_TMP_FOLDER, pdf_file)
     ocr_file = "%s.ocr" % pdf_file
 
-    call = [ addon_dir + os.sep + "resources"
-                + os.sep + "lib"
-                + os.sep + "ocrmypdf_wrapper",
+    call = [addon_dir + os.sep + "resources"
+            + os.sep + "lib"
+            + os.sep + "ocrmypdf_wrapper",
             pdf_file,
-            ocr_file ]
+            ocr_file]
 
-    xbmc.log(" ".join(call), xbmc.LOGNOTICE)
     p = subprocess.Popen(call, stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE)
+                         stderr=subprocess.PIPE)
     out, err = p.communicate()
     p.stdout.close()
-
-    xbmc.log(out, xbmc.LOGNOTICE)
-    xbmc.log(err, xbmc.LOGNOTICE)
 
     os.remove(pdf_file)
     shutil.move(ocr_file, pdf_file)
 
 
-
-
 def _rename_pdf(path):
-    
+
     splitted_path = path.split("/")
     filename = splitted_path[-1]
 
-    renamed_file = xbmcgui.Dialog().input("Rename PDF file", 
-                                        filename, 
-                                        xbmcgui.INPUT_ALPHANUM)
-    
+    renamed_file = xbmcgui.Dialog().input("Rename PDF file",
+                                          filename,
+                                          xbmcgui.INPUT_ALPHANUM)
+
     if renamed_file != "":
         archive = settings.getSetting("output_folder")
-        shutil.move("%s%s" % (archive, filename), 
+        shutil.move("%s%s" % (archive, filename),
                     "%s%s" % (archive, renamed_file))
 
 
-
-
 def _delete_pdf(path):
-    
+
     splitted_path = path.split("/")
     file_to_delete = splitted_path[-1]
 
-    ret = xbmcgui.Dialog().yesno(_PLUGIN_NAME, "Do you want to delete %s?" 
-                                    % file_to_delete)
+    ret = xbmcgui.Dialog().yesno(_PLUGIN_NAME, "Do you want to delete %s?"
+                                 % file_to_delete)
     if ret:
-        os.remove("%s%s" % (settings.getSetting("output_folder"), 
+        os.remove("%s%s" % (settings.getSetting("output_folder"),
                             file_to_delete))
-
-
 
 
 def _lampoff():
 
-    call = [ "scanimage",
-            "-n", "--lamp-switch=no" ]
+    call = ["scanimage",
+            "-n", "--lamp-switch=no"]
 
     _scanner = _get_scanner()
     if _scanner != None and len(_scanner) == 2:
-        call += [ "--device-name=%s" % _scanner[1] ]
-
-    xbmc.log(" ".join(call), xbmc.LOGNOTICE)
+        call += ["--device-name=%s" % _scanner[1]]
 
     p = subprocess.Popen(call, stdout=subprocess.PIPE)
     p.wait()
     p.stdout.close()
 
 
-
-
 def _email(pdf_file):
 
-    call = [ "mail",
+    call = ["mail",
             "-A", "%s%s" % (settings.getSetting("output_folder"),
                             pdf_file),
             "-s", "%s: %s" % (_PLUGIN_NAME, pdf_file),
             settings.getSetting("output_emailaddress")
             ]
 
-    xbmc.log(" ".join(call), xbmc.LOGNOTICE)
-
     p = subprocess.Popen(call, stdout=subprocess.PIPE)
     p.wait()
     p.stdout.close()
-
-
 
 
 def _print(pdf_file):
 
-    call = [ "lp",
+    call = ["lp",
             "-t", "%s: %s" % (_PLUGIN_NAME, pdf_file),
             ]
 
     if _get_printer() != "":
-        call += [ "-d", _get_printer() ]
+        call += ["-d", _get_printer()]
 
-    call += [ "%s%s" % (settings.getSetting("output_folder"),  pdf_file) ]
-
-    xbmc.log(" ".join(call), xbmc.LOGNOTICE)
+    call += ["%s%s" % (settings.getSetting("output_folder"),  pdf_file)]
 
     p = subprocess.Popen(call, stdout=subprocess.PIPE)
     p.wait()
     p.stdout.close()
-
-
 
 
 def _undo():
 
     tmp_files = _get_tmp_files()
     os.remove("%s%s" % (_TMP_FOLDER, tmp_files[-1]))
-
-
 
 
 def _clean():
@@ -733,42 +650,33 @@ def _clean():
         os.remove("%s%s" % (_TMP_FOLDER, f))
 
 
-
-
 def _clean_preview():
 
     for f in _get_preview_files():
         os.remove("%s%s" % (_TMP_FOLDER, f))
 
 
-
-
 def _preview(path):
 
     tokens = path.split("/")[1:]
     url = "%s%s" % (_TMP_FOLDER, tokens[-1])
-    xbmc.log(url, xbmc.LOGNOTICE)
     xbmc.executebuiltin('ShowPicture(%s)' % url)
-
-
 
 
 def execute(path, params):
 
     if "silent" not in params and "msg" in params:
         xbmc.executebuiltin("Notification(%s, %s, %s/icon.png)"
-                        % (_PLUGIN_NAME, params["msg"][0], addon_dir))
+                            % (_PLUGIN_NAME, params["msg"][0], addon_dir))
 
     try:
-        xbmc.log(path, xbmc.LOGNOTICE)
-        xbmc.log(" ".join(params["exec"]), xbmc.LOGNOTICE)
-
         if params["exec"][0] == "scan":
             _scan()
 
         elif params["exec"][0] == "undo":
             dialog = xbmcgui.Dialog()
-            ret = dialog.yesno(_PLUGIN_NAME, "Do you want to remove latest page?")
+            ret = dialog.yesno(
+                _PLUGIN_NAME, "Do you want to remove latest page?")
             if ret:
                 _undo()
                 if len(_get_tmp_files()) == 0:
@@ -783,11 +691,11 @@ def execute(path, params):
             _clean()
 
             if settings.getSetting("output_ocr") == "1":
-                 _ocr(pdf_file)
+                _ocr(pdf_file)
 
             shutil.move("%s%s" % (_TMP_FOLDER, pdf_file),
-                    "%s%s" % (settings.getSetting("output_folder"),
-                            pdf_file))
+                        "%s%s" % (settings.getSetting("output_folder"),
+                                  pdf_file))
 
         if params["exec"][0] == "email":
             _email(pdf_file)
@@ -798,7 +706,7 @@ def execute(path, params):
         if params["exec"][0] in ["clean"]:
             dialog = xbmcgui.Dialog()
             ret = dialog.yesno(_PLUGIN_NAME,
-                    "Do you want to clean filing?")
+                               "Do you want to clean filing?")
             if ret:
                 _clean()
                 _lampoff()
@@ -808,24 +716,21 @@ def execute(path, params):
         elif params["exec"][0] == "delete":
             _delete_pdf(path)
 
-
-        if params["exec"][0] in [ "rename", "delete" ]:
+        if params["exec"][0] in ["rename", "delete"]:
             xbmc.executebuiltin('Container.Update("plugin://%s%s","update")'
-                        % (__PLUGIN_ID__, "/archive"))
+                                % (__PLUGIN_ID__, "/archive"))
 
         if "silent" not in params and "msg" in params:
             xbmc.executebuiltin("Notification(%s, %s, %s/icon.png)"
-                        % ("Success!", params["msg"][0], addon_dir))
+                                % ("Success!", params["msg"][0], addon_dir))
 
             xbmc.executebuiltin('Container.Update("plugin://%s","update")'
-                        % __PLUGIN_ID__)
+                                % __PLUGIN_ID__)
 
     except ScanException:
         if "silent" not in params:
             xbmc.executebuiltin("Notification(%s, %s, %s/icon.png)"
-                        % ("Failed! Try again", params["msg"][0], addon_dir))
-
-
+                                % ("Failed! Try again", params["msg"][0], addon_dir))
 
 
 if __name__ == '__main__':
@@ -836,8 +741,8 @@ if __name__ == '__main__':
         find_printer()
     else:
         addon_handle = int(sys.argv[1])
-        path = urlparse.urlparse(sys.argv[0]).path
-        url_params = urlparse.parse_qs(sys.argv[2][1:])
+        path = urllib.parse.urlparse(sys.argv[0]).path
+        url_params = urllib.parse.parse_qs(sys.argv[2][1:])
 
         if "exec" in url_params:
             execute(path, url_params)
