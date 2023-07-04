@@ -11,9 +11,9 @@ import time
 import urllib.parse
 
 import xbmc
+import xbmcaddon
 import xbmcgui
 import xbmcplugin
-import xbmcaddon
 import xbmcvfs
 
 __PLUGIN_ID__ = "plugin.picture.sane-scanner"
@@ -330,6 +330,18 @@ def _build_root():
         entries += [
             {
                 "path": "/",
+                "name": "create PDF and send email",
+                "icon": "icon_email",
+                "exec": ["email_to_recipient"],
+                "msg": "Sending email",
+                "node": []
+            }
+        ]
+
+    if len(tmp_files) > 0 and settings.getSetting("output_email") == "1":
+        entries += [
+            {
+                "path": "/",
                 "name": "create PDF and send email to %s" % settings.getSetting("output_emailaddress"),
                 "icon": "icon_email",
                 "exec": ["email"],
@@ -607,13 +619,13 @@ def _lampoff():
     p.stdout.close()
 
 
-def _email(pdf_file):
+def _email(pdf_file, receipient):
 
     call = ["mail",
             "-A", "%s%s" % (settings.getSetting("output_folder"),
                             pdf_file),
             "-s", "%s: %s" % (_PLUGIN_NAME, pdf_file),
-            settings.getSetting("output_emailaddress")
+            receipient
             ]
 
     p = subprocess.Popen(call, stdout=subprocess.PIPE)
@@ -685,7 +697,7 @@ def execute(path, params):
         if params["exec"][0] == "preview":
             _preview(path)
 
-        if params["exec"][0] in ["pdf", "email", "print"]:
+        if params["exec"][0] in ["pdf", "email", "email_to_recipient", "print"]:
             _lampoff()
             pdf_file = _pdf()
             _clean()
@@ -697,8 +709,13 @@ def execute(path, params):
                         "%s%s" % (settings.getSetting("output_folder"),
                                   pdf_file))
 
+        if params["exec"][0] == "email_to_recipient":
+            recipient = xbmcgui.Dialog().input("Enter email-address")
+            if recipient:
+                _email(pdf_file, recipient)
+
         if params["exec"][0] == "email":
-            _email(pdf_file)
+            _email(pdf_file, settings.getSetting("output_emailaddress"))
 
         if params["exec"][0] == "print":
             _print(pdf_file)
