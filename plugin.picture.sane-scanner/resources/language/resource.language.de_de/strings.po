@@ -1,0 +1,338 @@
+# Kodi Media Center language file
+msgid ""
+msgstr ""
+"Project-Id-Version: Kodi Addons\n"
+"Report-Msgid-Bugs-To: alanwww1@kodi.org\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: English (http://www.transifex.com/projects/p/xbmc-addons/language/en/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#32000"
+msgid "Kodi Sane Scanner"
+msgstr ""
+
+msgctxt "#32001"
+msgid "No scanners found"
+msgstr "Keine Scanner gefunden"
+
+msgctxt "#32002"
+msgid "Check if scanner is connected!"
+msgstr "Prüfe, ob Scanner angeschlossen ist!"
+
+msgctxt "#32003"
+msgid "Scanners found"
+msgstr "Scanner gefunden"
+
+msgctxt "#32004"
+msgid "%i scanners added to device list"
+msgstr "%i Scanner zur Liste hinzugefügt"
+
+msgctxt "#32005"
+msgid "No printers found"
+msgstr "Keine Drucker gefunden"
+
+msgctxt "#32006"
+msgid "Check if printer is connected!"
+msgstr "Prüfe, ob Drucker angeschlossen ist!"
+
+msgctxt "#32007"
+msgid "Printers found"
+msgstr "Drucker gefunden"
+
+msgctxt "#32008"
+msgid "%i printers added to device list"
+msgstr "%i Drucker zur Liste hinzugefügt"
+
+msgctxt "#32009"
+msgid "Rendering preview... be patient!"
+msgstr "Erstelle Vorschau... bitte warten!"
+
+msgctxt "#32010"
+msgid "Rename File"
+msgstr "Datei umbenennen"
+
+msgctxt "#32011"
+msgid "Delete File"
+msgstr "Datei löschen"
+
+msgctxt "#32012"
+msgid "Scan image"
+msgstr "Seite einlesen"
+
+msgctxt "#32013"
+msgid "Scanning page"
+msgstr "lese Seite ein"
+
+msgctxt "#32014"
+msgid "create PDF"
+msgstr "erstelle PDF"
+
+msgctxt "#32015"
+msgid "Creating PDF... be patient!"
+msgstr "Erstelle PDF... bitte warten!"
+
+msgctxt "#32016"
+msgid "create PDF and send email"
+msgstr "erstelle PDF und schicke E-Mail"
+
+msgctxt "#32017"
+msgid "Sending email"
+msgstr "Sende E-Mail"
+
+msgctxt "#32018"
+msgid "create PDF and print on %s"
+msgstr "erstelle PDF und drucke auf %s"
+
+msgctxt "#32019"
+msgid "Printing on %s"
+msgstr "Drucke auf %s"
+
+msgctxt "#32020"
+msgid "preview page %i"
+msgstr "Vorschau Seite %i"
+
+msgctxt "#32021"
+msgid "remove latest page"
+msgstr "letzte Seite entfernen"
+
+msgctxt "#32022"
+msgid "removing latest page..."
+msgstr "Entferne letzte Seite..."
+
+msgctxt "#32023"
+msgid "clean whole filing"
+msgstr "Stapel löschen"
+
+msgctxt "#32024"
+msgid "Cleaning all pages..."
+msgstr "Lösche Stapel..."
+
+msgctxt "#32025"
+msgid "Archive"
+msgstr "Archiv"
+
+msgctxt "#32026"
+msgid "Page %i"
+msgstr "Seite %i"
+
+msgctxt "#32027"
+msgid "Execution failed!"
+msgstr "Ausführung gescheitert!"
+
+msgctxt "#32028"
+msgid "Try again!"
+msgstr "Probiere es nochmal!"
+
+msgctxt "#32029"
+msgid "Do you want to remove latest page?"
+msgstr "Möchtest Du die letzte Seite löschen?"
+
+msgctxt "#32030"
+msgid "Enter email-address"
+msgstr "Gib eine E-Mail-Adresse ein"
+
+msgctxt "#32031"
+msgid "Do you want to clean filing?"
+msgstr "Möchtest Du den Stapel löschen?"
+
+msgctxt "#32032"
+msgid "Success!"
+msgstr "Fertig!"
+
+msgctxt "#32033"
+msgid "Scanner"
+msgstr "Scanner"
+
+msgctxt "#32034"
+msgid "Start discovery"
+msgstr "Starte Suche"
+
+msgctxt "#32035"
+msgid "Select scanner"
+msgstr "Wähle Scanner aus"
+
+msgctxt "#32036"
+msgid "Scanner 1"
+msgstr "Scanner 1"
+
+msgctxt "#32037"
+msgid "Scanner 2"
+msgstr "Scanner 2"
+
+msgctxt "#32038"
+msgid "Scan settings"
+msgstr "Scan Einstellungen"
+
+msgctxt "#32039"
+msgid "Dimension"
+msgstr "Abmessungen"
+
+msgctxt "#32040"
+msgid "Mode"
+msgstr "Modus"
+
+msgctxt "#32041"
+msgid "Format"
+msgstr "Format"
+
+msgctxt "#32042"
+msgid "Resolution"
+msgstr "Auflösung"
+
+msgctxt "#32043"
+msgid "Brightness"
+msgstr "Helligkeit"
+
+msgctxt "#32044"
+msgid "Contrast"
+msgstr "Kontrast"
+
+msgctxt "#32045"
+msgid "Output"
+msgstr "Ausgabe"
+
+msgctxt "#32046"
+msgid "PDF file"
+msgstr "PDF Datei"
+
+msgctxt "#32047"
+msgid "OCR"
+msgstr "Texterkennung"
+
+msgctxt "#32048"
+msgid "Experimental! Processing may takes a long time!"
+msgstr "Experimentell! Kann länger dauern!"
+
+msgctxt "#32049"
+msgid "See README for setup pre-conditions correctly!"
+msgstr "Lese README für Voraussetzungen!"
+
+msgctxt "#32050"
+msgid "Archive folder"
+msgstr "Verzeichnis für Archiv"
+
+msgctxt "#32051"
+msgid "Email"
+msgstr "E-Mail"
+
+msgctxt "#32052"
+msgid "Enable email"
+msgstr "E-Mail aktivieren"
+
+msgctxt "#32053"
+msgid "Recipient's email addresses"
+msgstr "Adressbuch"
+
+msgctxt "#32054"
+msgid "Printer"
+msgstr "Drucker"
+
+msgctxt "#32055"
+msgid "Select printer"
+msgstr "Wähle Drucker"
+
+msgctxt "#32056"
+msgid "Printer 1"
+msgstr "Drucker 1"
+
+msgctxt "#32057"
+msgid "Printer 2"
+msgstr "Drucker 2"
+
+msgctxt "#32058"
+msgid "Printer 3"
+msgstr "Drucker 3"
+
+msgctxt "#32059"
+msgid "Printer 4"
+msgstr "Drucker 4"
+
+msgctxt "#32060"
+msgid "Printer 5"
+msgstr "Drucker 5"
+
+msgctxt "#32061"
+msgid "Enable archive"
+msgstr "Archiv aktivieren"
+
+msgctxt "#32062"
+msgid "File operations (rename, delete)"
+msgstr "Datei-Operationen (umbenennen, löschen)"
+
+msgctxt "#32063"
+msgid "off"
+msgstr "aus"
+
+msgctxt "#32064"
+msgid "any"
+msgstr "erst besten"
+
+msgctxt "#32065"
+msgid "Full"
+msgstr "Ganze Fläche"
+
+msgctxt "#32066"
+msgid "US Letter"
+msgstr "US Letter"
+
+msgctxt "#32067"
+msgid "DIN A4"
+msgstr "DIN A4"
+
+msgctxt "#32068"
+msgid "DIN A5"
+msgstr "DIN A5"
+
+msgctxt "#32069"
+msgid "DIN A6"
+msgstr "DIN A6"
+
+msgctxt "#32070"
+msgid "Lineart (hardware)"
+msgstr "Schwarzweiß (hardwareseitig)"
+
+msgctxt "#32071"
+msgid "Gray"
+msgstr "Graustufen"
+
+msgctxt "#32072"
+msgid "Color"
+msgstr "Farbbild"
+
+msgctxt "#32073"
+msgid "Lineart (software)"
+msgstr "Schwarzweiß (softwareseitig)"
+
+msgctxt "#32074"
+msgid "PNG"
+msgstr "PNG"
+
+msgctxt "#32075"
+msgid "JPEG"
+msgstr "JPEG"
+
+msgctxt "#32076"
+msgid "Select email address"
+msgstr "Wähle Empfänger aus"
+
+msgctxt "#32077"
+msgid "<new recipient>"
+msgstr "<neuer Empfänger>"
+
+msgctxt "#32078"
+msgid "email address not valid!"
+msgstr "E-Mail Adresse ist nicht gültig!"
+
+msgctxt "#32079"
+msgid "Rename PDF file"
+msgstr "PDF-Datei umbenennen"
+
+msgctxt "#32080"
+msgid "Do you really want to delete %s?"
+msgstr "Möchtest Du die Datei %s wirklich löschen?"

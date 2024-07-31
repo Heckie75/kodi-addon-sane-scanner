@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.picture.sane-scanner" name="Kodi Sane Scanner" version="2.1.0"
-	provider-name="Heckie">
+<addon id="plugin.picture.sane-scanner" name="Kodi Sane Scanner" version="2.1.1" provider-name="Heckie">
 	<extension point="xbmc.python.pluginsource" library="addon.py">
 		<provides>image</provides>
 	</extension>
@@ -8,15 +7,19 @@
 		<summary lang="en_gb">Kodi Sane Scanner</summary>
 		<description lang="en_gb">A scan tool for Kodi based on sane</description>
 		<disclaimer lang="en_gb"></disclaimer>
-		<language></language>
-		<platform>linux</platform>
-		<license></license>
-		<forum></forum>
-		<website></website>
-		<email></email>
-		<source></source>
-		<news>v2.0.0 (2021-02-20)
-		- Migration to Kodi v19 alias Matrix
+		<language>en</language>
+		<language>de</language>
+		<platform>all</platform>
+		<license>MIT</license>
+		<website>https://github.com/Heckie75/kodi-addon-sane-scanner</website>
+		<source>https://github.com/Heckie75/kodi-addon-sane-scanner</source>
+		<news>
+v2.1.1 (2024-07-31)
+- Refactoring
+- new mode 'monochrome' for genesys backends
+
+v2.0.0 (2021-02-20)
+- Migration to Kodi v19 alias Matrix
 		</news>
 		<assets>
 			<icon>resources/icon.png</icon>
@@ -26,7 +29,7 @@
 			<screenshot>resources/assets/screenshot_3.png</screenshot>
 			<screenshot>resources/assets/screenshot_settings_1.png</screenshot>
 			<screenshot>resources/assets/screenshot_settings_2.png</screenshot>
-			<screenshot>resources/assets/screenshot_settings_3.png</screenshot>						
+			<screenshot>resources/assets/screenshot_settings_3.png</screenshot>
 		</assets>
 	</extension>
 </addon>

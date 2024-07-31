@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <settings>
-  <category label="Scanner">
-    <setting label="Start discovery" type="action" action="RunScript($ID,find_scanner)" default=""/>
-    <setting label="Select scanner" type="enum" id="scanner_scanner" values="Scanner 1|Scanner 2|any" default="2" />
-    <setting label="Scanner 1" type="text" enable="false" id="scanner_0" default="" />
-    <setting label="Scanner 2" type="text" enable="false" id="scanner_1" default="" />
-    <setting label="Scan settings" type="lsep" />
-    <setting label="Dimension" type="enum" id="scanner_dimension" values="Full|US letter|Din A4|Din A5|Din A6" default="0" />
-    <setting label="Mode" type="enum" id="scanner_mode" values="Lineart|Gray|Color" default="0" />
-    <setting label="Format" type="enum" id="scanner_format" values="PNG|JPEG" default="0" />
-    <setting label="Resolution" type="enum" id="scanner_resolution" values="150|200|300|600" default="1" />
-    <setting label="Brightness (in %)" type="slider" id="scanner_brightness" default="0" range="-100,1,100" option="int" />
-    <setting label="Contrast (in %)" type="slider" id="scanner_contrast" default="0" range="-100,1,100" option="int" />
+  <category label="32033">
+    <setting label="32034" type="action" action="RunScript($ID,find_scanner)" default=""/>
+    <setting label="32035" type="enum" id="scanner_scanner" lvalues="32036|32037|32064" default="3" />
+    <setting label="32036" type="text" enable="false" id="scanner_0" default="" />
+    <setting label="32037" type="text" enable="false" id="scanner_1" default="" />
+    <setting label="32038" type="lsep" />
+    <setting label="32039" type="enum" id="scanner_dimension" lvalues="32065|32066|32067|32068|32069" default="0" />
+    <setting label="32040" type="enum" id="scanner_mode" lvalues="32072|32071|32073|32070" default="0" />
+    <setting label="32041" type="enum" id="scanner_format" lvalues="32074|32075" default="0" />
+    <setting label="32042" type="enum" id="scanner_resolution" values="4800|2400|1200|600|300|150|100|75" default="4" />
+    <setting label="32043" type="slider" id="scanner_brightness" default="0" range="-100,1,100" option="int" />
+    <setting label="32044" type="slider" id="scanner_contrast" default="0" range="-100,1,100" option="int" />
   </category>
-  <category label="Output">
-    <setting label="PDF file" type="lsep" />
-    <setting label="OCR" type="enum" id="output_ocr" values="off|on" default="0" />
-    <setting label="Experimental! Processing may takes a long time!" type="text" enable="false"/>
-    <setting label="See README for setup pre-conditions correctly!" type="text" enable="false"/>
-    <setting label="Archive" type="lsep" />
-    <setting label="Archive folder" type="folder" id="output_folder" default="~/" />
-    <setting label="Email" type="lsep" />
-    <setting label="Enable email" type="enum" id="output_email" values="No|Yes" default="0" />
-    <setting label="See README for setup pre-conditions correctly!" type="text" visible="eq(-1,1)" enable="false"/>
-    <setting label="Recipient's email address" id="output_emailaddress" type="text" visible="eq(-2,1)" />
-    <setting label="Printer" type="lsep" />
-    <setting label="Start discovery" type="action" action="RunScript($ID,find_printer)" />
-    <setting label="Select printer" type="enum" id="output_printer" values="off|Printer 1|Printer 2|Printer 3|Printer 4|Printer 5" default="0" />
-    <setting label="Printer 1" id="printer_1" type="text" enable="false"  default="" />
-    <setting label="Printer 2" id="printer_2" type="text" enable="false"  default="" />
-    <setting label="Printer 3" id="printer_3" type="text" enable="false"  default="" />
-    <setting label="Printer 4" id="printer_4" type="text" enable="false"  default="" />
-    <setting label="Printer 5" id="printer_5" type="text" enable="false"  default="" />
+  <category label="32045">
+    <setting label="32046" type="lsep" />
+    <setting label="32047" type="bool" id="output_ocr" default="false" />
+    <setting label="32048" type="text" enable="false"/>
+    <setting label="32049" type="text" enable="false"/>
+    <setting label="32025" type="lsep" />
+    <setting label="32050" type="folder" id="output_folder" default="~/" />
+    <setting label="32051" type="lsep" />
+    <setting label="32052" type="bool" id="output_email" default="false" />
+    <setting label="32049" type="text" visible="eq(-1,1)" enable="false"/>
+    <setting label="32053" id="output_emailaddress" type="text" visible="eq(-2,true)" />
+    <setting label="32054" type="lsep" />
+    <setting label="32034" type="action" action="RunScript($ID,find_printer)" />
+    <setting label="32055" type="enum" id="output_printer" lvalues="32063|32056|32057|32058|32059|32060" default="0" />
+    <setting label="32056" id="printer_1" type="text" enable="false" default="" />
+    <setting label="32057" id="printer_2" type="text" enable="false" default="" />
+    <setting label="32058" id="printer_3" type="text" enable="false" default="" />
+    <setting label="32059" id="printer_4" type="text" enable="false" default="" />
+    <setting label="32060" id="printer_5" type="text" enable="false" default="" />
   </category>
-  <category label="Archive">
-    <setting label="Browsing archive" type="bool" id="archive" default="true" />
-    <setting label="Resolution" type="enum" id="archive_resolution" values="150|200|300|600" default="1" />
-    <setting label="File operations (rename, delete)" type="bool" id="archive_operations" default="false" />
+  <category label="32025">
+    <setting label="32061" type="bool" id="archive" default="true" />
+    <setting label="32042" type="enum" id="archive_resolution" values="4800|2400|1200|600|300|150|100|75" default="4" />
+    <setting label="32062" type="bool" id="archive_operations" default="false" />
   </category>
 </settings>
