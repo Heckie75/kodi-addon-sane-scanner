@@ -35,6 +35,7 @@
   </category>
   <category label="32025">
     <setting label="32061" type="bool" id="archive" default="true" />
+    <setting label="32083" type="bool" id="soffice" default="false" />
     <setting label="32042" type="enum" id="archive_resolution" values="4800|2400|1200|600|300|150|100|75" default="4" />
     <setting label="32062" type="bool" id="archive_operations" default="false" />
   </category>
