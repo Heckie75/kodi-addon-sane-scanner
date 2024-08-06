@@ -330,9 +330,45 @@ msgid "email address not valid!"
 msgstr ""
 
 msgctxt "#32079"
-msgid "Rename PDF file"
+msgid "Rename folder"
 msgstr ""
 
 msgctxt "#32080"
 msgid "Do you really want to delete %s?"
+msgstr ""
+
+msgctxt "#32081"
+msgid "Send File"
+msgstr ""
+
+msgctxt "#32082"
+msgid "Print File"
+msgstr ""
+
+msgctxt "#32083"
+msgid "Support LibreOffice"
+msgstr ""
+
+msgctxt "#32084"
+msgid "Move File"
+msgstr ""
+
+msgctxt "#32085"
+msgid "Move %s"
+msgstr ""
+
+msgctxt "#32086"
+msgid "Delete Folder"
+msgstr "Verzeichnis löschen"
+
+msgctxt "#32087"
+msgid "Do you really want to delete Folder %s and all files included?\n\nIT'S A FOLDER!"
+msgstr ""
+
+msgctxt "#32088"
+msgid "Move Folder"
+msgstr ""
+
+msgctxt "#32089"
+msgid "Create Folder"
 msgstr ""

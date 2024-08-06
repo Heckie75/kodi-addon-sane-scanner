@@ -1,29 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.picture.sane-scanner" name="Kodi Sane Scanner" version="2.1.1" provider-name="Heckie">
+<addon id="plugin.picture.sane-scanner" name="Kodi Sane Scanner" version="3.0.0" provider-name="Heckie">
 	<extension point="xbmc.python.pluginsource" library="addon.py">
 		<provides>image</provides>
 	</extension>
 	<extension point="xbmc.addon.metadata">
-		<summary lang="en_gb">Kodi Sane Scanner</summary>
-		<description lang="en_gb">A scan tool for Kodi based on sane</description>
-		<disclaimer lang="en_gb"></disclaimer>
+		<summary lang="en_GB">Kodi Sane Scanner</summary>
+		<description lang="en_GB">A scan tool for Kodi based on sane</description>
 		<language>en</language>
 		<language>de</language>
-		<platform>all</platform>
+		<platform>linux</platform>
 		<license>MIT</license>
 		<website>https://github.com/Heckie75/kodi-addon-sane-scanner</website>
 		<source>https://github.com/Heckie75/kodi-addon-sane-scanner</source>
 		<news>
-v2.1.1 (2024-07-31)
+v3.0.0 (2024-08-06)
+- Browse folders in archive
+- Preview other file types, e.g. PDF, images, video, audio and documents supported by LibreOffice
+- Added email addressbook
+- New file operations in archive, i.e. send, print, rename, delete
+- Translations for English and German
 - Refactoring
+
+v2.1.1 (2024-07-31)
 - new mode 'monochrome' for genesys backends
 
 v2.0.0 (2021-02-20)
 - Migration to Kodi v19 alias Matrix
 		</news>
 		<assets>
-			<icon>resources/icon.png</icon>
-			<fanart></fanart>
+			<icon>resources/assets/icon.png</icon>
 			<screenshot>resources/assets/screenshot_1.png</screenshot>
 			<screenshot>resources/assets/screenshot_2.png</screenshot>
 			<screenshot>resources/assets/screenshot_3.png</screenshot>
