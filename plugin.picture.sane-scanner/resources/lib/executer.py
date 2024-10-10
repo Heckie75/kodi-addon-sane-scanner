@@ -42,6 +42,8 @@ def execute(url, params):
                                               xbmcgui.INPUT_ALPHANUM)
 
             pdf_file = pdf_file or current_file
+            if not pdf_file.lower().endswith(".pdf"):
+                pdf_file += ".pdf"
 
             shutil.move(os.path.join(tempfile.gettempdir(), current_file),
                         os.path.join(addon.getSetting("output_folder"), pdf_file))
