@@ -26,8 +26,8 @@ def execute(url, params):
 
             scanner.lampoff()
             if params["exec"][0] == "scan2email":
-                recipient = email.ask_email_address()
-                if not recipient:
+                recipients = email.ask_email_addresses()
+                if not recipients:
                     return
 
             pdf_file = pdf.convert_to_pdf(scanner.get_scanned_files())
@@ -50,7 +50,7 @@ def execute(url, params):
 
             if params["exec"][0] == "scan2email":
                 email.send_email(addon.getSetting(
-                    "output_folder"), pdf_file, recipient)
+                    "output_folder"), pdf_file, recipients)
 
             elif params["exec"][0] == "scan2print":
                 printer.print_(addon.getSetting("output_folder"), pdf_file)
@@ -83,10 +83,10 @@ def execute(url, params):
                 scanner.lampoff()
 
         elif params["exec"][0] == "email":
-            recipient = email.ask_email_address()
-            if recipient:
+            recipients = email.ask_email_addresses()
+            if recipients:
                 _, folder, filename = archive.get_real_path_in_archive(url)
-                email.send_email(folder, filename, recipient)
+                email.send_email(folder, filename, recipients)
 
         elif params["exec"][0] == "print":
             _, folder, pdf_file = archive.get_real_path_in_archive(url)
