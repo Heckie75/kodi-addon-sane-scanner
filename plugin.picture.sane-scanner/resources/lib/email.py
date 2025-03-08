@@ -6,20 +6,22 @@ import xbmcaddon
 import xbmcgui
 
 
-def ask_email_address() -> str:
+def ask_email_addresses() -> 'list[str]':
 
     addon = xbmcaddon.Addon()
     addressbook = [a for a in addon.getSetting(
         "output_emailaddress").split("|") if a.strip()]
-    selection = 0
-    if addressbook and addressbook[0] != "":
-        selection = xbmcgui.Dialog().select(
-            heading=addon.getLocalizedString(32076), list=addressbook + [addon.getLocalizedString(32077)], preselect=0)
 
-    if selection == -1:
+    selection = xbmcgui.Dialog().multiselect(
+        heading=addon.getLocalizedString(32076), options=addressbook + [addon.getLocalizedString(32077)], preselect=[0])
+
+    if not selection:
         return None
 
-    if selection == len(addressbook) or not addressbook or addressbook[0] == "":
+    recipients = list()
+
+    # add new recipient
+    if len(addressbook) in selection or not addressbook or addressbook[0] == "":
         recipient = xbmcgui.Dialog().input(addon.getLocalizedString(32030))
         recipient = recipient.strip()
         match = re.match(
@@ -28,26 +30,30 @@ def ask_email_address() -> str:
             xbmcgui.Dialog().ok(heading=addon.getLocalizedString(
                 32000), message=addon.getLocalizedString(32078))
             return None
-    else:
-        recipient = addressbook[selection]
+        recipients.append(recipient)
 
-    if recipient in addressbook:
-        addressbook.remove(recipient)
-    addressbook.insert(0, recipient)
-    addon.setSetting("output_emailaddress", "|".join(addressbook))
+    recipients.extend(
+        [addressbook[i] for i in selection if i < len(addressbook)])
 
-    return recipient
+    # update addressbook / change order so that most recent are on top
+    new_addressbook = list(recipients)
+    new_addressbook.extend(
+        [address for address in addressbook if address not in recipients])
+    addon.setSetting("output_emailaddress", "|".join(new_addressbook))
+
+    return recipients
 
 
-def send_email(folder: str, filename: str, recipient: str) -> None:
+def send_email(folder: str, filename: str, recipients: 'list[str]') -> None:
 
     addon = xbmcaddon.Addon()
-    call = ["mail",
-            "-A", os.path.join(folder, filename),
-            "-s", f"{addon.getLocalizedString(32000)}: {filename}",
-            recipient
-            ]
+    for recipient in recipients:
+        call = ["mail",
+                "-A", os.path.join(folder, filename),
+                "-s", f"{addon.getLocalizedString(32000)}: {filename}",
+                recipient
+                ]
 
-    p = subprocess.Popen(call, stdout=subprocess.PIPE)
-    p.wait()
-    p.stdout.close()
+        p = subprocess.Popen(call, stdout=subprocess.PIPE)
+        p.wait()
+        p.stdout.close()

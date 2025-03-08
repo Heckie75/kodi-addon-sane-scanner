@@ -318,7 +318,7 @@ msgid "JPEG"
 msgstr ""
 
 msgctxt "#32076"
-msgid "Select email address"
+msgid "Select one ore more email addresses"
 msgstr ""
 
 msgctxt "#32077"

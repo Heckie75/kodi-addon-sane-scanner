@@ -318,8 +318,8 @@ msgid "JPEG"
 msgstr "JPEG"
 
 msgctxt "#32076"
-msgid "Select email address"
-msgstr "Wähle Empfänger aus"
+msgid "Select one ore more email addresses"
+msgstr "Wähle einen oder mehrere Empfänger aus"
 
 msgctxt "#32077"
 msgid "<new recipient>"

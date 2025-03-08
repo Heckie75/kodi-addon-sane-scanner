@@ -111,7 +111,7 @@ def get_file_type(path: str) -> str:
 
     def _get_file_extension(path: str) -> str:
 
-        m = re.match("^.+(\.[^\.]+)$", path.lower())
+        m = re.match(r"^.+(\.[^\.]+)$", path.lower())
         if not m:
             return None
 

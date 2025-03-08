@@ -56,7 +56,7 @@ def find_scanner() -> None:
     out, err = p1.communicate()
 
     i = 0
-    for match in re.finditer('([^ ]+) (.+)', out.decode("utf-8")):
+    for match in re.finditer(r'([^ ]+) (.+)', out.decode("utf-8")):
         addon.setSetting("scanner_%i" %
                          i, f"{match.group(2)}|{match.group(1)}")
         i += 1
