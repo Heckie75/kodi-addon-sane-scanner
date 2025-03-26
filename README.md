@@ -1,32 +1,33 @@
 # kodi-addon-sane-scanner
 **A scan tool for Kodi**
 
-This KODI addon enables you to scan documents directly in Kodi, e.g. by using your USB flatbed scanner.
+This Kodi add-on allows direct document scanning within Kodi, such as with a USB flatbed scanner.
 
-Of course, Kodi isn't this kind of software where you expect to scan documents.
-But for me it is convenient to scan and archive my daily mail from my sofa
-simply by using my remote control and without opening any desktop application. 
+While Kodi isn't typically used for scanning, this add-on provides a convenient way to scan and archive documents from the couch, using only a remote control.
 
 Before I have written this addon I used the scanner buttons with same functionality by
 utilizing [scanbd](https://wiki.ubuntuusers.de/scanbd/). But this doesn't work
 all the time for some reasons and polls the USB interface all the time in
 order to determine if there was an button event. See also problems that I have reported [here](https://bugs.launchpad.net/ubuntu/+source/scanbd/+bug/1747115)
 
-That's why I have written this addon which comes with the following features:
-* Kodi-sane-scanner is a *picture addon* 
-* configurable devices, dimension, resolution, color mode, brightness, contrast
-* scan single or multiple pages
-* preview page
-* convert to PDF file
-* join multiple pages to single document
-* add OCR text layer to PDF
-* archive PDF in filesystem
-* send PDF as email attachment
-* print document
-* view PDF documents located in archive folder (PDF files in general!)
-* rename and delete PDF documents in archive folder via context menu
+Here's a cleaned-up version, focusing on clarity and a more professional tone:
 
-Here are some screenshots. 
+This add-on provides the following document scanning features within Kodi:
+
+1. **Picture Add-on:** Integrates seamlessly into Kodi's picture library.
+2. **Configurable Scan Settings:** Adjust device, dimensions, resolution, color mode, brightness, and contrast.
+3. **Single/Multi-Page Scanning:** Scan individual pages or multiple pages in a single session.
+4. **Page Preview:** Review scans before finalizing.
+5. **PDF Conversion:** Convert scanned images to PDF format.
+6. **Multi-Page PDF Merging:** Combine multiple scanned pages into a single PDF document.
+7. **OCR Text Layer:** Add an OCR-generated text layer to PDFs for searchable content.
+8. **PDF Archiving:** Save PDFs to a specified file system archive.
+9. **Email Attachment:** Send PDFs as email attachments.
+10. **Document Printing:** Print scanned documents directly.
+11. **PDF Viewing:** View PDF documents stored in the archive folder (or any PDF and many other file types).
+12. **Archive Management:** Rename, delete and move  documents within the archive folder via the context menu.
+
+Screenshots are available below.
 
 <img src="plugin.picture.sane-scanner/resources/assets/screenshot_1.png?raw=true">
 <sup>Initial screen in Kodi before you have scanned a document</sup>
@@ -117,6 +118,11 @@ convert image.png image.pdf
 
 If ```convert``` is not installed follow the instructions and install it.
 
+I have installed the following:
+```
+sudo apt install imagemagick-6.q16
+```
+
 Probably you get a message that some priviledges are not available.
 In this case you must probably edit ```/etc/ImageMagick-6/policy.xml```
 and uncomment the PDF line like this:
@@ -128,27 +134,17 @@ and uncomment the PDF line like this:
 
 OCR is the hardest. If you want to use OCR you must install ```tesseract-ocr``` and ```ocrmypdf```
 
-I guess that I did the following:
-
+I have installed the following:
 ```
-apt install \
-    python3-pip python-lxml \
-    tesseract-ocr tesseract-ocr-deu \
-    python-pdfminer python-psycopg2 \
-    imagemagick parallel poppler-utils pdftk \
-    libtiff-tools qpdf \
-    unpaper python-reportlab python-pil ghostscript
-
-pip3 install --upgrade pip  ## Upgrade von pip 8.1.1 auf die aktuelle pip-Version
-
-apt install libffi-dev
-pip3 install ocrmypdf
+sudo apt install ocrmypdf imagemagick-6.q16 tesseract-ocr tesseract-ocr-deu
 ```
 
 Note: ```tesseract-ocr-deu``` is for german language. 
 
 Maybe this is outdated. For latest instructions check these sites:
 * [German ubuntusers OCRmyPDF](https://wiki.ubuntuusers.de/OCRmyPDF/)
+
+Note: Please make sure that the file ```ocrmypdf_wrapper``` in addons-folder is executable!
 
 ## Send email
 
@@ -167,3 +163,18 @@ apt install mailutils postfix
 Of course, you must also configure postfix to your needs. Check instructions here:
 * [Ubuntu documentation for Postfix](https://help.ubuntu.com/lts/serverguide/postfix.html)
 * [German Ubuntuusers](https://wiki.ubuntuusers.de/Postfix/)
+
+## LibreOffice
+
+To preview some document types in archive it is required that LibreOffice is installed. 
+
+## Limitations, Known Bugs, and End of Maintenance
+
+This Kodi add-on is limited to Linux systems. It is not an official Kodi add-on, as it violates Kodi's policies by executing external programs.
+
+Due to the lack of reliable Debian packages for Kodi starting with Ubuntu 24.04, and its incompatibility with Flatpak, maintenance of this add-on has been discontinued.
+
+The following known bugs and limitations exist:
+
+1. **Encoding Issues:** Starting with Ubuntu 24.04, Kodi's compilation provded under https://launchpad.net/~ubuntuhandbook1/+archive/ubuntu/kodi or incompatibility with Python 3.12.3, browsing archives may cause Kodi to crash if folders contain files with German umlauts (ÄÖÜäöüß) or potentially other special characters. This is likely due to encoding problems (utf-8) with ```os.listdir()``` in ```archive.py``` and ```ListItems``` creation in ```directory.py```.
+2. **Monochrome Conversion:** The genesis scanner driver does not natively support black-and-white mode. A workaround using ```convert -monochrome``` is employed to convert grayscale to monochrome. However, the resulting quality is significantly degraded on Ubuntu 24.04.
