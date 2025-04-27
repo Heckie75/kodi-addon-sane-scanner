@@ -1,3 +1,0 @@
-#!/bin/bash
-OMP_THREAD_LIMIT=4
-ocrmypdf -l deu $1 $2 >> /tmp/ocr.log

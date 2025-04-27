@@ -4,7 +4,8 @@ import subprocess
 import xbmcaddon
 import xbmcgui
 import xbmcvfs
-from resources.lib import archive
+from resources.lib import archive, fileutils
+
 
 def find_printer() -> None:
 
@@ -16,7 +17,7 @@ def find_printer() -> None:
     out, err = p1.communicate()
 
     i = 0
-    for printer in out.decode("utf-8").split("\n"):
+    for printer in fileutils.decode(out).split("\n"):
         addon.setSetting("printer_%i" % (i + 1), printer)
         i += 1
 
@@ -49,17 +50,18 @@ def print_(folder: str, filename: str) -> None:
 
     type_ = archive.get_file_type(filename)
     if type_ in [archive.PDF, archive.DOC, archive.PRESENTATION, archive.DRAW, archive.SPREADSHEET, archive.SCRIPT, archive.PICTURE]:
-        call = ["soffice", "--pt", get_printer(), os.path.join(folder, filename)]
+        call = ["soffice", "--pt",
+                get_printer(), fileutils.encode(os.path.join(folder, filename))]
 
     elif type_ == archive.PDF:
         call = ["lp",
-                "-t", f"{addon.getLocalizedString(32000)}: {filename}",
+                "-t", f"{addon.getLocalizedString(32000)}: {fileutils.encode(filename)}",
                 ]
 
         if get_printer() != "":
             call += ["-d", get_printer()]
 
-        call += [ os.path.join(folder, filename) ]
+        call += [fileutils.encode(os.path.join(folder, filename))]
 
     else:
         return

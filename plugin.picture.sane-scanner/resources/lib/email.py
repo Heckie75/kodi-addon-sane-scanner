@@ -4,6 +4,7 @@ import subprocess
 
 import xbmcaddon
 import xbmcgui
+from resources.lib import fileutils
 
 
 def ask_email_addresses() -> 'list[str]':
@@ -49,7 +50,8 @@ def send_email(folder: str, filename: str, recipients: 'list[str]') -> None:
     addon = xbmcaddon.Addon()
     for recipient in recipients:
         call = ["mail",
-                "-A", os.path.join(folder, filename),
+                # TODO still encoding problems and can't send files with special characters
+                "-A", fileutils.encode(os.path.join(folder, filename)),
                 "-s", f"{addon.getLocalizedString(32000)}: {filename}",
                 recipient
                 ]

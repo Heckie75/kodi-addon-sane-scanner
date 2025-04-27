@@ -1,11 +1,11 @@
 import datetime
 import os
-import shutil
 import subprocess
 import tempfile
 
 import xbmcaddon
 import xbmcvfs
+from resources.lib import fileutils
 
 
 def convert_to_pdf(scanned_files: 'list[str]') -> str:
@@ -35,14 +35,18 @@ def add_ocr_layer(pdf_file: str) -> None:
     pdf_file = os.path.join(tempfile.gettempdir(), pdf_file)
     ocr_file = f"{pdf_file}.ocr"
 
+    """
     call = [os.path.join(addon_dir, "resources", "lib", "ocrmypdf_wrapper"),
             pdf_file,
             ocr_file]
+    """
+
+    call = ["ocrmypdf", "-l", "deu", fileutils.encode(pdf_file), fileutils.encode(ocr_file)]
 
     p = subprocess.Popen(call, stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE)
     out, err = p.communicate()
     p.stdout.close()
 
-    os.remove(pdf_file)
-    shutil.move(ocr_file, pdf_file)
+    fileutils.remove(pdf_file)
+    fileutils.move(ocr_file, pdf_file)

@@ -56,7 +56,7 @@ def find_scanner() -> None:
     out, err = p1.communicate()
 
     i = 0
-    for match in re.finditer(r'([^ ]+) (.+)', out.decode("utf-8")):
+    for match in re.finditer(r'([^ ]+) (.+)', fileutils.decode(out)):
         addon.setSetting("scanner_%i" %
                          i, f"{match.group(2)}|{match.group(1)}")
         i += 1
@@ -144,14 +144,14 @@ def get_scanned_files() -> 'list[str]':
 def delete_latest_scanned_file():
 
     scanned_files = get_scanned_files()
-    os.remove(os.path.join(tempfile.gettempdir(), scanned_files[-1]))
+    fileutils.remove(os.path.join(tempfile.gettempdir(), scanned_files[-1]))
 
 
 def delete_scanned_files():
 
     scanned_files = get_scanned_files()
     for f in scanned_files:
-        os.remove(os.path.join(tempfile.gettempdir(), f))
+        fileutils.remove(os.path.join(tempfile.gettempdir(), f))
 
 
 def lampoff():

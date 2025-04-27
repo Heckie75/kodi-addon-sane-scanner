@@ -1,12 +1,12 @@
 import os
-import shutil
 import tempfile
 
 import xbmc
 import xbmcaddon
 import xbmcgui
 import xbmcvfs
-from resources.lib import archive, email, pdf, preview, printer, scanner
+from resources.lib import (archive, email, fileutils, pdf, preview, printer,
+                           scanner)
 
 
 def execute(url, params):
@@ -40,13 +40,13 @@ def execute(url, params):
             pdf_file = xbmcgui.Dialog().input(addon.getLocalizedString(32010),
                                               pdf_file,
                                               xbmcgui.INPUT_ALPHANUM)
-
+            pdf_file = fileutils.normalize(pdf_file)
             pdf_file = pdf_file or current_file
             if not pdf_file.lower().endswith(".pdf"):
                 pdf_file += ".pdf"
 
-            shutil.move(os.path.join(tempfile.gettempdir(), current_file),
-                        os.path.join(addon.getSetting("output_folder"), pdf_file))
+            fileutils.move(os.path.join(tempfile.gettempdir(), current_file),
+                           os.path.join(addon.getSetting("output_folder"), pdf_file))
 
             if params["exec"][0] == "scan2email":
                 email.send_email(addon.getSetting(

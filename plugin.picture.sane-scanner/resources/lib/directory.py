@@ -6,7 +6,7 @@ import xbmcaddon
 import xbmcgui
 import xbmcplugin
 import xbmcvfs
-from resources.lib import archive, preview, printer, scanner
+from resources.lib import archive, fileutils, preview, printer, scanner
 
 
 def _build_directory(path: str) -> 'list[dict]':
@@ -157,7 +157,7 @@ def _build_directory(path: str) -> 'list[dict]':
             entry = {
                 "path": f[0],
                 "name": f[0],
-                "date": datetime.datetime.fromtimestamp(os.path.getmtime(filename=f[1])),
+                "date": datetime.datetime.fromtimestamp(fileutils.getmtime(f[1])),
                 "file": True
             }
 
@@ -189,7 +189,8 @@ def _build_directory(path: str) -> 'list[dict]':
                 ] if archive_operations else []
 
                 if archive_operations and soffice:
-                    entry["contextItems"].insert(1, (addon.getLocalizedString(32082), "print"))
+                    entry["contextItems"].insert(
+                        1, (addon.getLocalizedString(32082), "print"))
 
             elif f[2] in [archive.PDF, archive.DOC, archive.PRESENTATION, archive.DRAW, archive.SPREADSHEET, archive.SCRIPT]:
                 entry["contextItems"] = [

@@ -1,42 +1,369 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<settings>
-  <category label="32033">
-    <setting label="32034" type="action" action="RunScript($ID,find_scanner)" default=""/>
-    <setting label="32035" type="enum" id="scanner_scanner" lvalues="32036|32037|32064" default="3" />
-    <setting label="32036" type="text" enable="false" id="scanner_0" default="" />
-    <setting label="32037" type="text" enable="false" id="scanner_1" default="" />
-    <setting label="32038" type="lsep" />
-    <setting label="32039" type="enum" id="scanner_dimension" lvalues="32065|32066|32067|32068|32069" default="0" />
-    <setting label="32040" type="enum" id="scanner_mode" lvalues="32072|32071|32073|32070" default="0" />
-    <setting label="32041" type="enum" id="scanner_format" lvalues="32074|32075" default="0" />
-    <setting label="32042" type="enum" id="scanner_resolution" values="4800|2400|1200|600|300|150|100|75" default="4" />
-    <setting label="32043" type="slider" id="scanner_brightness" default="0" range="-100,1,100" option="int" />
-    <setting label="32044" type="slider" id="scanner_contrast" default="0" range="-100,1,100" option="int" />
-  </category>
-  <category label="32045">
-    <setting label="32046" type="lsep" />
-    <setting label="32047" type="bool" id="output_ocr" default="false" />
-    <setting label="32048" type="text" enable="false"/>
-    <setting label="32049" type="text" enable="false"/>
-    <setting label="32025" type="lsep" />
-    <setting label="32050" type="folder" id="output_folder" default="~/" />
-    <setting label="32051" type="lsep" />
-    <setting label="32052" type="bool" id="output_email" default="false" />
-    <setting label="32049" type="text" visible="eq(-1,1)" enable="false"/>
-    <setting label="32053" id="output_emailaddress" type="text" visible="eq(-2,true)" />
-    <setting label="32054" type="lsep" />
-    <setting label="32034" type="action" action="RunScript($ID,find_printer)" />
-    <setting label="32055" type="enum" id="output_printer" lvalues="32063|32056|32057|32058|32059|32060" default="0" />
-    <setting label="32056" id="printer_1" type="text" enable="false" default="" />
-    <setting label="32057" id="printer_2" type="text" enable="false" default="" />
-    <setting label="32058" id="printer_3" type="text" enable="false" default="" />
-    <setting label="32059" id="printer_4" type="text" enable="false" default="" />
-    <setting label="32060" id="printer_5" type="text" enable="false" default="" />
-  </category>
-  <category label="32025">
-    <setting label="32061" type="bool" id="archive" default="true" />
-    <setting label="32083" type="bool" id="soffice" default="false" />
-    <setting label="32042" type="enum" id="archive_resolution" values="4800|2400|1200|600|300|150|100|75" default="4" />
-    <setting label="32062" type="bool" id="archive_operations" default="false" />
-  </category>
+<?xml version="1.0" ?>
+<settings version="1">
+	<section id="plugin.picture.sane-scanner">
+		<category id="scanner" label="32033" help="">
+			<group id="1">
+				<setting id="kixporwrlpieljvznynjcfrgparbipzx" type="action" label="32034" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<control type="button" format="string">
+						<data>RunScript(plugin.picture.sane-scanner,find_scanner)</data>
+					</control>
+				</setting>
+				<setting id="scanner_scanner" type="integer" label="32035" help="">
+					<level>0</level>
+					<default>3</default>
+					<constraints>
+						<options>
+							<option label="32036">0</option>
+							<option label="32037">1</option>
+							<option label="32064">2</option>
+						</options>
+					</constraints>
+					<control type="spinner" format="string"/>
+				</setting>
+				<setting id="scanner_0" type="string" label="32036" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="enable">
+							<condition on="property" name="InfoBool">false</condition>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32036</heading>
+					</control>
+				</setting>
+				<setting id="scanner_1" type="string" label="32037" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="enable">
+							<condition on="property" name="InfoBool">false</condition>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32037</heading>
+					</control>
+				</setting>
+			</group>
+			<group id="2" label="32038">
+				<setting id="scanner_dimension" type="integer" label="32039" help="">
+					<level>0</level>
+					<default>0</default>
+					<constraints>
+						<options>
+							<option label="32065">0</option>
+							<option label="32066">1</option>
+							<option label="32067">2</option>
+							<option label="32068">3</option>
+							<option label="32069">4</option>
+						</options>
+					</constraints>
+					<control type="spinner" format="string"/>
+				</setting>
+				<setting id="scanner_mode" type="integer" label="32040" help="">
+					<level>0</level>
+					<default>0</default>
+					<constraints>
+						<options>
+							<option label="32072">0</option>
+							<option label="32071">1</option>
+							<option label="32073">2</option>
+							<option label="32070">3</option>
+						</options>
+					</constraints>
+					<control type="spinner" format="string"/>
+				</setting>
+				<setting id="scanner_format" type="integer" label="32041" help="">
+					<level>0</level>
+					<default>0</default>
+					<constraints>
+						<options>
+							<option label="32074">0</option>
+							<option label="32075">1</option>
+						</options>
+					</constraints>
+					<control type="spinner" format="string"/>
+				</setting>
+				<setting id="scanner_resolution" type="integer" label="32042" help="">
+					<level>0</level>
+					<default>4</default>
+					<constraints>
+						<options>
+							<option label="32100">0</option>
+							<option label="32101">1</option>
+							<option label="32102">2</option>
+							<option label="32103">3</option>
+							<option label="32104">4</option>
+							<option label="32105">5</option>
+							<option label="32106">6</option>
+							<option label="32107">7</option>
+						</options>
+					</constraints>
+					<control type="spinner" format="string"/>
+				</setting>
+				<setting id="scanner_brightness" type="integer" label="32043" help="">
+					<level>0</level>
+					<default>0</default>
+					<constraints>
+						<minimum>-100</minimum>
+						<step>1</step>
+						<maximum>100</maximum>
+					</constraints>
+					<control type="slider" format="integer">
+						<popup>false</popup>
+					</control>
+				</setting>
+				<setting id="scanner_contrast" type="integer" label="32044" help="">
+					<level>0</level>
+					<default>0</default>
+					<constraints>
+						<minimum>-100</minimum>
+						<step>1</step>
+						<maximum>100</maximum>
+					</constraints>
+					<control type="slider" format="integer">
+						<popup>false</popup>
+					</control>
+				</setting>
+			</group>
+		</category>
+		<category id="ausgabe" label="32045" help="">
+			<group id="1" label="32046">
+				<setting id="output_ocr" type="boolean" label="32047" help="">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="wawjnvtuxgkaxjdjcmxwnfnycrlnnxeo" type="string" label="32048" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="enable">
+							<condition on="property" name="InfoBool">false</condition>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32048</heading>
+					</control>
+				</setting>
+				<setting id="mxseupvatjicbovhwsfkibdsftbdkgvm" type="string" label="32049" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="enable">
+							<condition on="property" name="InfoBool">false</condition>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32049</heading>
+					</control>
+				</setting>
+			</group>
+			<group id="2" label="32025">
+				<setting id="output_folder" type="path" label="32050" help="">
+					<level>0</level>
+					<default>~/</default>
+					<constraints>
+						<writable>false</writable>
+					</constraints>
+					<control type="button" format="path">
+						<heading>32050</heading>
+					</control>
+				</setting>
+			</group>
+			<group id="3" label="32051">
+				<setting id="output_email" type="boolean" label="32052" help="">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="hhiuitnufaejqurfjkiyolxkrebekpnk" type="string" label="32049" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="enable">
+							<condition on="property" name="InfoBool">false</condition>
+						</dependency>
+						<dependency type="visible">
+							<condition operator="is" setting="output_email">1</condition>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32049</heading>
+					</control>
+				</setting>
+				<setting id="output_emailaddress" type="string" label="32053" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<condition operator="is" setting="output_email">true</condition>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32053</heading>
+					</control>
+				</setting>
+			</group>
+			<group id="4" label="32054">
+				<setting id="tmdfhaimsbqxxahfwfretwcfuiwqncab" type="action" label="32034" help="">
+					<level>0</level>
+					<data>RunScript(plugin.picture.sane-scanner,find_printer)</data>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<control type="button" format="action"/>
+				</setting>
+				<setting id="output_printer" type="integer" label="32055" help="">
+					<level>0</level>
+					<default>0</default>
+					<constraints>
+						<options>
+							<option label="32063">0</option>
+							<option label="32056">1</option>
+							<option label="32057">2</option>
+							<option label="32058">3</option>
+							<option label="32059">4</option>
+							<option label="32060">5</option>
+						</options>
+					</constraints>
+					<control type="spinner" format="string"/>
+				</setting>
+				<setting id="printer_1" type="string" label="32056" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="enable">
+							<condition on="property" name="InfoBool">false</condition>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32056</heading>
+					</control>
+				</setting>
+				<setting id="printer_2" type="string" label="32057" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="enable">
+							<condition on="property" name="InfoBool">false</condition>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32057</heading>
+					</control>
+				</setting>
+				<setting id="printer_3" type="string" label="32058" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="enable">
+							<condition on="property" name="InfoBool">false</condition>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32058</heading>
+					</control>
+				</setting>
+				<setting id="printer_4" type="string" label="32059" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="enable">
+							<condition on="property" name="InfoBool">false</condition>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32059</heading>
+					</control>
+				</setting>
+				<setting id="printer_5" type="string" label="32060" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="enable">
+							<condition on="property" name="InfoBool">false</condition>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32060</heading>
+					</control>
+				</setting>
+			</group>
+		</category>
+		<category id="archiv" label="32025" help="">
+			<group id="1">
+				<setting id="archive" type="boolean" label="32061" help="">
+					<level>0</level>
+					<default>true</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="soffice" type="boolean" label="32083" help="">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="archive_resolution" type="integer" label="32042" help="">
+					<level>0</level>
+					<default>4</default>
+					<constraints>
+						<options>
+							<option label="4800">0</option>
+							<option label="2400">1</option>
+							<option label="1200">2</option>
+							<option label="600">3</option>
+							<option label="300">4</option>
+							<option label="150">5</option>
+							<option label="100">6</option>
+							<option label="75">7</option>
+						</options>
+					</constraints>
+					<control type="spinner" format="string"/>
+				</setting>
+				<setting id="archive_operations" type="boolean" label="32062" help="">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+				</setting>
+			</group>
+		</category>
+	</section>
 </settings>

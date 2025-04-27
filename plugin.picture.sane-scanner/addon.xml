@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.picture.sane-scanner" name="Kodi Sane Scanner" version="3.1.0" provider-name="Heckie">
+<addon id="plugin.picture.sane-scanner" name="Kodi Sane Scanner" version="3.2.0" provider-name="Heckie">
 	<extension point="xbmc.python.pluginsource" library="addon.py">
 		<provides>image</provides>
 	</extension>
@@ -13,6 +13,9 @@
 		<website>https://github.com/Heckie75/kodi-addon-sane-scanner</website>
 		<source>https://github.com/Heckie75/kodi-addon-sane-scanner</source>
 		<news>
+v3.2.0 (2025-04-27)
+- Fixed encoding errors on Ubuntu 24.04+ / Kodi from Debian
+
 v3.1.0 (2025-03-08)
 - Support of multiple email recipients
 

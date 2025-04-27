@@ -1,6 +1,8 @@
 import sys
 import urllib.parse
 
+import locale
+
 from resources.lib import directory, executer, printer, scanner
 
 if __name__ == '__main__':

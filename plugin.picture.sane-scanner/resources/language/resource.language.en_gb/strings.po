@@ -372,3 +372,36 @@ msgstr ""
 msgctxt "#32089"
 msgid "Create Folder"
 msgstr ""
+
+msgctxt "#32100"
+msgid "4800 dpi"
+msgstr ""
+
+msgctxt "#32101"
+msgid "2400 dpi"
+msgstr ""
+
+msgctxt "#32102"
+msgid "1200 dpi"
+msgstr ""
+
+msgctxt "#32103"
+msgid "600 dpi"
+msgstr ""
+
+msgctxt "#32104"
+msgid "300 dpi"
+msgstr ""
+
+msgctxt "#32105"
+msgid "150 dpi"
+msgstr ""
+
+msgctxt "#32106"
+msgid "100 dpi"
+msgstr ""
+
+msgctxt "#32107"
+msgid "75 dpi"
+msgstr ""
+

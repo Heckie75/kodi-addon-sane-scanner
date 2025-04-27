@@ -1,10 +1,10 @@
 import os
 import re
-import shutil
 
 import xbmc
 import xbmcaddon
 import xbmcgui
+from resources.lib import fileutils
 
 AUDIO = "audio"
 VIDEO = "video"
@@ -17,11 +17,11 @@ PRESENTATION = "presentation"
 FOLDER = "folder"
 SCRIPT = "script"
 
+
 def get_files_in_archive(path: str) -> 'list[tuple[str, str,str]]':
 
-    files = os.listdir(path)
     result = list()
-    for f in files:
+    for f in fileutils.listdir(path):
         if f.startswith("."):
             continue
         fullpath = os.path.join(path, f)
@@ -52,7 +52,8 @@ def rename(url: str) -> str:
                                           xbmcgui.INPUT_ALPHANUM)
 
     if renamed_file != "":
-        shutil.move(fullpath, os.path.join(archive, renamed_file))
+        renamed_file = fileutils.normalize(renamed_file)
+        fileutils.move(fullpath, os.path.join(archive, renamed_file))
         return _get_path_to_refresh(url=url, fullpath=fullpath)
 
     return None
@@ -66,7 +67,7 @@ def mkdir(url: str) -> str:
                                         xbmcgui.INPUT_ALPHANUM)
 
     if new_folder != "":
-        os.mkdir(os.path.join(archive, new_folder))
+        fileutils.mkdir(os.path.join(archive, new_folder))
         return _get_path_to_refresh(url=url, fullpath=fullpath)
 
     return None
@@ -76,14 +77,14 @@ def delete(url: str) -> str:
 
     addon = xbmcaddon.Addon()
     fullpath, _, file_to_delete = get_real_path_in_archive(url)
-    isdir = os.path.isdir(fullpath)
+    isdir = fileutils.isdir(fullpath)
     yes = xbmcgui.Dialog().yesno(addon.getLocalizedString(
         32000), addon.getLocalizedString(32087 if isdir else 32080) % file_to_delete)
     if yes:
-        if os.path.isdir(fullpath):
-            shutil.rmtree(fullpath)
+        if fileutils.isdir(fullpath):
+            fileutils.rmtree(fullpath)
         else:
-            os.remove(fullpath)
+            fileutils.remove(fullpath)
         return _get_path_to_refresh(url=url, fullpath=fullpath)
 
     return None
@@ -96,7 +97,7 @@ def move(url: str) -> str:
     target = xbmcgui.Dialog().browseSingle(
         type=3, heading=addon.getLocalizedString(32085) % file_to_move, shares="local")
     if target:
-        shutil.move(fullpath, target)
+        fileutils.move(fullpath, target)
         return _get_path_to_refresh(url=url, fullpath=fullpath)
 
     return None
@@ -104,7 +105,7 @@ def move(url: str) -> str:
 
 def _get_path_to_refresh(url: str, fullpath: str) -> str:
 
-    return url if os.path.isdir(fullpath) else os.path.sep.join(url.split(os.path.sep)[:-1])
+    return url if fileutils.isdir(fullpath) else os.path.sep.join(url.split(os.path.sep)[:-1])
 
 
 def get_file_type(path: str) -> str:
@@ -119,7 +120,7 @@ def get_file_type(path: str) -> str:
             return m.groups()[0]
 
     addon = xbmcaddon.Addon()
-    if os.path.isdir(path):
+    if fileutils.isdir(path):
         return FOLDER
 
     ext = _get_file_extension(path)
@@ -130,7 +131,7 @@ def get_file_type(path: str) -> str:
     elif soffice and ext and ext in [".ini", ".sh", ".py", ".md", ".json", ".bat", ".yml", ".http"]:
         return SCRIPT
 
-    elif ext and ext in [".doc", ".dot", ".odt", ".rtf", ".wpd", ".wps", ".txt", ".ott", ".docx", ".dotx", ".epub"]:
+    elif ext and ext in [".doc", ".dot", ".odt", ".rtf", ".wpd", ".wps", ".txt", ".ott", ".docx", ".dotx", ".epub", ".html"]:
         return DOC
 
     elif soffice and ext and ext in [".csv", ".ods", ".xls", ".xlt", ".ots", ".xlsx", ".xltx"]:

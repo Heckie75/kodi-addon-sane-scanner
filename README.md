@@ -172,9 +172,6 @@ To preview some document types in archive it is required that LibreOffice is ins
 
 This Kodi add-on is limited to Linux systems. It is not an official Kodi add-on, as it violates Kodi's policies by executing external programs.
 
-Due to the lack of reliable Debian packages for Kodi starting with Ubuntu 24.04, and its incompatibility with Flatpak, maintenance of this add-on has been discontinued.
+The addon is incompatibility with Flatpak. The following known bugs and limitations exist:
 
-The following known bugs and limitations exist:
-
-1. **Encoding Issues:** Starting with Ubuntu 24.04, Kodi's compilation provded under https://launchpad.net/~ubuntuhandbook1/+archive/ubuntu/kodi or incompatibility with Python 3.12.3, browsing archives may cause Kodi to crash if folders contain files with German umlauts (ÄÖÜäöüß) or potentially other special characters. This is likely due to encoding problems (utf-8) with ```os.listdir()``` in ```archive.py``` and ```ListItems``` creation in ```directory.py```.
-2. **Monochrome Conversion:** The genesis scanner driver does not natively support black-and-white mode. A workaround using ```convert -monochrome``` is employed to convert grayscale to monochrome. However, the resulting quality is significantly degraded on Ubuntu 24.04.
+1. **Encoding Issues:** Starting with Ubuntu 24.04, there are problems in context of encoding filenames. There are some fixes starting with version 3.2.0. But it is still not possible to move, print and send files with special characters

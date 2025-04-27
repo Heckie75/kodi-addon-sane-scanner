@@ -6,7 +6,8 @@ import tempfile
 import xbmc
 import xbmcaddon
 from resources.lib import fileutils
-from resources.lib.archive import DOC, DRAW, PDF, PRESENTATION, SPREADSHEET, SCRIPT
+from resources.lib.archive import (DOC, DRAW, PDF, PRESENTATION, SCRIPT,
+                                   SPREADSHEET)
 
 _PDF_PREVIEW_FILE = "kodi-sane-scanner-pdf"
 
@@ -32,18 +33,15 @@ def convert_for_preview(path: str, filename: str, type_: str) -> 'list[str]':
 
         fullpath = os.path.join(path, filename)
         call = ["soffice", "--convert-to", "pdf",
-                "--outdir", tempfile.gettempdir(), fullpath]
+                "--outdir", tempfile.gettempdir(), fileutils.encode(fullpath)]
         p = subprocess.Popen(call, stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE)
         out, err = p.communicate()
-        xbmc.log(out.decode("utf-8"), xbmc.LOGINFO)
         p.stdout.close()
         m = re.match(
-            r"^convert .+ -> .+/([^/]+) using filter : .+", out.decode("utf-8"))
+            r"^convert .+ -> .+/([^/]+) using filter : .+", fileutils.decode(out))
         if m:
             outfile = m.groups()[0]
-
-        xbmc.log(outfile, xbmc.LOGINFO)
 
         return tempfile.gettempdir(), outfile
 
@@ -53,9 +51,9 @@ def convert_for_preview(path: str, filename: str, type_: str) -> 'list[str]':
                     addon.getSettingInt("archive_resolution")],
                 "-quality", "90",
                 "-background", "white", "-alpha", "background", "-alpha", "off",
-                os.path.join(path, filename),
-                os.path.join(tempfile.gettempdir(),
-                             f"{_PDF_PREVIEW_FILE}.{filename}.png")
+                fileutils.encode(os.path.join(path, filename)),
+                fileutils.encode(os.path.join(tempfile.gettempdir(),
+                                              f"{_PDF_PREVIEW_FILE}.{filename}.png"))
                 ]
 
         p = subprocess.Popen(call, stdout=subprocess.PIPE)
@@ -67,7 +65,7 @@ def convert_for_preview(path: str, filename: str, type_: str) -> 'list[str]':
     if type_ in [DOC, DRAW, PDF, PRESENTATION, SPREADSHEET, SCRIPT]:
         path, filename = _convert_to_pdf(path, filename)
         _convert_from_pdf(path, filename)
-        os.remove(os.path.join(path, filename))
+        fileutils.remove(os.path.join(path, filename))
     else:
         _convert_from_pdf(path, filename)
 
@@ -77,7 +75,7 @@ def convert_for_preview(path: str, filename: str, type_: str) -> 'list[str]':
 def _clean_preview_files() -> None:
 
     for f in _get_preview_files():
-        os.remove(os.path.join(tempfile.gettempdir(), f))
+        fileutils.remove(os.path.join(tempfile.gettempdir(), f))
 
 
 def preview(path: str) -> None:
